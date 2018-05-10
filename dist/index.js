@@ -42,8 +42,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 
 
-//export { ColumnDefType };
-
 var CenteredText = function CenteredText(props) {
   return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
     "div",
@@ -165,6 +163,7 @@ var ReactstrapTable = function (_React$Component) {
             return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
               __WEBPACK_IMPORTED_MODULE_4__Columns__["d" /* SortableColumn */],
               {
+                key: i,
                 ordinal: i,
                 columnDef: c,
                 sortClicked: _this3.sortClicked
@@ -174,7 +173,7 @@ var ReactstrapTable = function (_React$Component) {
           } else {
             return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
               __WEBPACK_IMPORTED_MODULE_4__Columns__["a" /* Column */],
-              { ordinal: i, columnDef: c },
+              { key: i, ordinal: i, columnDef: c },
               c.headerText
             );
           }
@@ -203,12 +202,12 @@ var ReactstrapTable = function (_React$Component) {
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           "tr",
           { key: i },
-          Object.keys(row).map(function (key) {
+          Object.keys(row).map(function (key, j) {
             var def = _this4.getColumnDef(key);
 
             return def.clickable ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
               "td",
-              null,
+              { key: j },
               __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 "a",
                 {
@@ -220,7 +219,7 @@ var ReactstrapTable = function (_React$Component) {
               )
             ) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
               "td",
-              null,
+              { key: j },
               row[key].toString()
             );
           })
@@ -243,7 +242,16 @@ var ReactstrapTable = function (_React$Component) {
         null,
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           __WEBPACK_IMPORTED_MODULE_3_reactstrap__["a" /* Table */],
-          this.props,
+          {
+            tag: this.props.tag,
+            size: this.props.size,
+            bordered: this.props.bordered,
+            borderless: this.props.borderless,
+            striped: this.props.striped,
+            dark: this.props.dark,
+            hover: this.props.hover,
+            responsive: this.props.responsive
+          },
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             "thead",
             null,
@@ -273,7 +281,15 @@ ReactstrapTable.propTypes = {
   hidden: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.bool,
   pagesDisplayed: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.number,
   columnDefs: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.arrayOf(__WEBPACK_IMPORTED_MODULE_4__Columns__["c" /* ColumnDefType */]),
-  cellClicked: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func
+  cellClicked: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
+  tag: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.oneOfType([__WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func, __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string]),
+  size: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
+  bordered: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.bool,
+  borderless: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.bool,
+  striped: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.bool,
+  dark: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.bool,
+  hover: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.bool,
+  responsive: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.bool
 };
 
 ReactstrapTable.defaultProps = {
@@ -297,13 +313,7 @@ ReactstrapTable.defaultProps = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_prop_types__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_prop_types__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__SortButton__ = __webpack_require__(45);
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+var _this = this;
 
 
 
@@ -332,43 +342,24 @@ function ColumnDef(fieldName, headerText, sortable, headerStyle) {
 var Column = function Column(props) {
   return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
     "th",
-    { key: props.ordinal, style: props.columnDef.headerStyle },
+    { style: props.columnDef.headerStyle },
     props.children
   );
 };
 
-var SortableColumn = function (_React$Component) {
-  _inherits(SortableColumn, _React$Component);
+var SortableColumn = function SortableColumn(props) {
+  _this.sortClicked = function (ascending) {
+    _this.props.sortClicked(props.ordinal, ascending);
+  };
 
-  function SortableColumn(props, context) {
-    _classCallCheck(this, SortableColumn);
-
-    var _this = _possibleConstructorReturn(this, (SortableColumn.__proto__ || Object.getPrototypeOf(SortableColumn)).call(this, props, context));
-
-    _this.sortClicked = _this.sortClicked.bind(_this);
-    return _this;
-  }
-
-  _createClass(SortableColumn, [{
-    key: "sortClicked",
-    value: function sortClicked(ascending) {
-      this.props.sortClicked(this.props.ordinal, ascending);
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        Column,
-        { key: this.props.ordinal, columnDef: this.props.columnDef },
-        this.props.children,
-        " ",
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__SortButton__["a" /* default */], { sortClicked: this.sortClicked })
-      );
-    }
-  }]);
-
-  return SortableColumn;
-}(__WEBPACK_IMPORTED_MODULE_0_react___default.a.Component);
+  return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+    "th",
+    { style: props.columnDef.headerStyle },
+    props.children,
+    " ",
+    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__SortButton__["a" /* default */], { sortClicked: _this.sortClicked })
+  );
+};
 
 SortableColumn.propTypes = {
   sortClicked: __WEBPACK_IMPORTED_MODULE_2_prop_types___default.a.func.isRequired,
@@ -409,7 +400,9 @@ var _this = this;
 
 
 
+
 var iconSize = "shrink-3";
+
 var SortButton = function SortButton(props) {
   _this.upClicked = function () {
     props.sortClicked(true);

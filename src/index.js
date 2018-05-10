@@ -5,8 +5,6 @@ import { Table } from "reactstrap";
 import { Column, SortableColumn, ColumnDef, ColumnDefType } from "./Columns";
 import { orderBy } from "lodash";
 
-//export { ColumnDefType };
-
 const CenteredText = props => {
   return (
     <div className="text-center font-italic">
@@ -101,6 +99,7 @@ export default class ReactstrapTable extends React.Component {
           if (c.sortable) {
             return (
               <SortableColumn
+                key={i}
                 ordinal={i}
                 columnDef={c}
                 sortClicked={this.sortClicked}
@@ -110,7 +109,7 @@ export default class ReactstrapTable extends React.Component {
             );
           } else {
             return (
-              <Column ordinal={i} columnDef={c}>
+              <Column key={i} ordinal={i} columnDef={c}>
                 {c.headerText}
               </Column>
             );
@@ -138,11 +137,11 @@ export default class ReactstrapTable extends React.Component {
     return this.state.SortedData.slice(start, end).map((row, i) => {
       return (
         <tr key={i}>
-          {Object.keys(row).map(key => {
+          {Object.keys(row).map((key, j) => {
             const def = this.getColumnDef(key);
 
             return def.clickable ? (
-              <td>
+              <td key={j}>
                 <a
                   data-fieldname={def.fieldName}
                   href=""
@@ -152,7 +151,7 @@ export default class ReactstrapTable extends React.Component {
                 </a>
               </td>
             ) : (
-              <td>{row[key].toString()}</td>
+              <td key={j}>{row[key].toString()}</td>
             );
           })}
         </tr>
@@ -170,7 +169,16 @@ export default class ReactstrapTable extends React.Component {
     }
     return this.state.HasData ? (
       <div>
-        <Table {...this.props}>
+        <Table
+          tag={this.props.tag}
+          size={this.props.size}
+          bordered={this.props.bordered}
+          borderless={this.props.borderless}
+          striped={this.props.striped}
+          dark={this.props.dark}
+          hover={this.props.hover}
+          responsive={this.props.responsive}
+        >
           <thead>{this.getHeaders()}</thead>
           <tbody>{this.getBody()}</tbody>
         </Table>
@@ -190,7 +198,15 @@ ReactstrapTable.propTypes = {
   hidden: PropTypes.bool,
   pagesDisplayed: PropTypes.number,
   columnDefs: PropTypes.arrayOf(ColumnDefType),
-  cellClicked: PropTypes.func
+  cellClicked: PropTypes.func,
+  tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  size: PropTypes.string,
+  bordered: PropTypes.bool,
+  borderless: PropTypes.bool,
+  striped: PropTypes.bool,
+  dark: PropTypes.bool,
+  hover: PropTypes.bool,
+  responsive: PropTypes.bool
 };
 
 ReactstrapTable.defaultProps = {

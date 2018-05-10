@@ -31,31 +31,20 @@ export function ColumnDef(fieldName, headerText, sortable, headerStyle) {
 }
 
 export const Column = props => {
+  return <th style={props.columnDef.headerStyle}>{props.children}</th>;
+};
+
+export const SortableColumn = props => {
+  this.sortClicked = ascending => {
+    this.props.sortClicked(props.ordinal, ascending);
+  };
+
   return (
-    <th key={props.ordinal} style={props.columnDef.headerStyle}>
-      {props.children}
+    <th style={props.columnDef.headerStyle}>
+      {props.children} <SortButton sortClicked={this.sortClicked} />
     </th>
   );
 };
-
-export class SortableColumn extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-
-    this.sortClicked = this.sortClicked.bind(this);
-  }
-
-  sortClicked(ascending) {
-    this.props.sortClicked(this.props.ordinal, ascending);
-  }
-  render() {
-    return (
-      <Column key={this.props.ordinal} columnDef={this.props.columnDef}>
-        {this.props.children} <SortButton sortClicked={this.sortClicked} />
-      </Column>
-    );
-  }
-}
 
 SortableColumn.propTypes = {
   sortClicked: PropTypes.func.isRequired,

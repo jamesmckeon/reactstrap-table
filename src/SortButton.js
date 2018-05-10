@@ -5,7 +5,9 @@ import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 import UpIcon from "@fortawesome/fontawesome-free-solid/faAngleUp";
 import DownIcon from "@fortawesome/fontawesome-free-solid/faAngleDown";
 import "./index.css";
+
 const iconSize = "shrink-3";
+
 const SortButton = props => {
   this.upClicked = () => {
     props.sortClicked(true);
