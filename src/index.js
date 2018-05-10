@@ -5,6 +5,7 @@ import { Table } from "reactstrap";
 import { Column, SortableColumn, ColumnDef, ColumnDefType } from "./Columns";
 import TableCell from "./TableCell";
 import { orderBy } from "lodash";
+import moment from "moment";
 
 const CenteredText = props => {
   return (
@@ -50,16 +51,59 @@ export default class ReactstrapTable extends React.Component {
   componentWillReceiveProps(newProps) {
     this.setState({ ColumnDefs: this.getColumnDefs(newProps.Data) });
   }
+
   sortClicked(ordinal, sortAscending) {
     const data = this.state.SortedData;
     //get field
     const row = data[0];
     const key = Object.keys(row)[ordinal];
+    const val = row[key];
+    const isDate = moment(val).isValid();
 
-    orderBy(data, [key], [sortAscending ? "asc" : "desc"]);
+    //https://stackoverflow.com/a/9716488/1342632
+    const isNumber = !isNaN(parseFloat(val)) && isFinite(val);
 
+    var sortedData;
+
+    console.log(isDate);
+    console.log(isNumber);
+    let comparer;
+
+    if (isDate) {
+      sortedData = data.sort(function(a, b) {
+        return sortAscending
+          ? new Date(a) - new Date(b)
+          : new Date(b) - new Date(a);
+      });
+    } else if (isNumber) {
+      comparer = (a, b) => {
+        return parseInt(a[key]) - parseInt(b[key]);
+      };
+    } else {
+      comparer = function compare(a, b) {
+        // Use toUpperCase() to ignore character casing
+        const valA = a[key].toUpperCase();
+        const valB = b[key].toUpperCase();
+
+        let comparison = 0;
+        if (valA > valB) {
+          comparison = 1;
+        } else if (valA < valB) {
+          comparison = -1;
+        }
+        return comparison;
+      };
+    }
+
+    sortedData = sortAscending ? data.sort(comparer) : data.reverse(comparer);
+
+    console.log(
+      sortedData.map(d => {
+        return d[key];
+      })
+    );
     this.setState({
-      SortedData: orderBy(data, [key], [sortAscending ? "asc" : "desc"])
+      SortedData: sortedData
     });
   }
 

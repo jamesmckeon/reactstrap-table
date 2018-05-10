@@ -36,7 +36,7 @@ const TableCell = props => {
 };
 
 TableCell.propTypes = {
-  columnDef: PropTypes.instanceOf(ColumnDefType).isRequired,
+  columnDef: PropTypes.shape(ColumnDefType).isRequired,
   onClick: PropTypes.func,
   id: PropTypes.string.isRequired
 };

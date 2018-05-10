@@ -20,14 +20,15 @@
         "start": ""
     },
     "dependencies": {
+        "@fortawesome/fontawesome": "^1.1.7",
+        "@fortawesome/fontawesome-free-solid": "^5.0.12",
+        "@fortawesome/react-fontawesome": "0.0.19",
         "lodash": "^4.17.10",
+        "moment": "^2.22.1",
         "react": "^16.0.0",
         "react-dom": "^16.0.0",
         "reactstrap": "^6.0.1",
-        "reactstrap-pager": "^1.0.1",
-        "@fortawesome/fontawesome": "^1.1.7",
-        "@fortawesome/fontawesome-free-solid": "^5.0.12",
-        "@fortawesome/react-fontawesome": "0.0.19"
+        "reactstrap-pager": "^1.0.1"
     },
     "devDependencies": {
         "babel-eslint": "^8.0.1",

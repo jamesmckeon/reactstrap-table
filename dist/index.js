@@ -10,144 +10,24 @@
 })(typeof self !== 'undefined' ? self : this, function() {
 return webpackJsonp_jbmckeon_reactstrap_table([1],{
 
-/***/ 17:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return ColumnDefType; });
-/* harmony export (immutable) */ __webpack_exports__["b"] = ColumnDef;
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Column; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return SortableColumn; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_dom__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_dom___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react_dom__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_prop_types__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_prop_types__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__SortButton__ = __webpack_require__(49);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__SortButtonGroup__ = __webpack_require__(55);
-var _this = this;
-
-
-
-
-
-
-
-
-var ColumnDefType = Object(__WEBPACK_IMPORTED_MODULE_2_prop_types__["shape"])({
-  fieldName: __WEBPACK_IMPORTED_MODULE_2_prop_types__["string"].isRequired,
-  headerText: __WEBPACK_IMPORTED_MODULE_2_prop_types__["string"],
-  sortable: __WEBPACK_IMPORTED_MODULE_2_prop_types__["bool"],
-  headerStyle: __WEBPACK_IMPORTED_MODULE_2_prop_types__["object"],
-  clickable: __WEBPACK_IMPORTED_MODULE_2_prop_types__["bool"],
-  hiddenDown: Object(__WEBPACK_IMPORTED_MODULE_2_prop_types__["oneOf"])(["xs", "sm", "md", "lg", "xl"]),
-  tooltipText: __WEBPACK_IMPORTED_MODULE_2_prop_types__["string"]
-});
-
-function ColumnDef(fieldName, headerText, sortable, headerStyle) {
-  if (!fieldName) {
-    throw new Error("fieldName is required");
-  }
-  this.sortable = sortable || false;
-  this.headerText = headerText || "";
-  this.headerStyle = headerStyle || {};
-  this.fieldName = fieldName;
-}
-
-var headerClass = function headerClass(hideDown) {
-  if (hideDown) {
-    return "d-none d-" + hideDown + "-table-cell align-middle";
-  } else {
-    return "align-middle";
-  }
-};
-var Column = function Column(props) {
-  _this.className = headerClass(props.columnDef.hiddenDown);
-  return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-    "th",
-    { style: props.columnDef.headerStyle, className: _this.className },
-    props.children
-  );
-};
-
-var SortableColumn = function SortableColumn(props) {
-  _this.sortClicked = function (ascending) {
-    props.sortClicked(props.ordinal, ascending);
-  };
-
-  _this.className = headerClass(props.columnDef.hiddenDown);
-  return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-    "th",
-    { style: props.columnDef.headerStyle, className: _this.className },
-    props.children,
-    " ",
-    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__SortButtonGroup__["a" /* default */], { sortClicked: _this.sortClicked })
-  );
-};
-
-SortableColumn.propTypes = {
-  sortClicked: __WEBPACK_IMPORTED_MODULE_2_prop_types___default.a.func.isRequired,
-  ordinal: __WEBPACK_IMPORTED_MODULE_2_prop_types___default.a.number.isRequired,
-  columnDef: ColumnDefType.isRequired
-};
-
-Column.propTypes = {
-  ordinal: __WEBPACK_IMPORTED_MODULE_2_prop_types___default.a.number.isRequired,
-  columnDef: ColumnDefType.isRequired,
-  onClick: __WEBPACK_IMPORTED_MODULE_2_prop_types___default.a.func
-};
-
-/***/ }),
-
-/***/ 21:
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(51);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
-var transform;
-
-var options = {"hmr":true}
-options.transform = transform
-// add the styles to the DOM
-var update = __webpack_require__(53)(content, options);
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../node_modules/css-loader/index.js!./index.css", function() {
-			var newContent = require("!!../node_modules/css-loader/index.js!./index.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-
-/***/ 22:
+/***/ 147:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_reactstrap_pager__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_reactstrap_pager__ = __webpack_require__(152);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_reactstrap_pager___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_reactstrap_pager__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_reactstrap__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Columns__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__TableCell__ = __webpack_require__(56);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_lodash__ = __webpack_require__(57);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_reactstrap__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Columns__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__TableCell__ = __webpack_require__(181);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_lodash__ = __webpack_require__(182);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_lodash__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_moment__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_moment__);
 var _ReactstrapTable$prop;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -161,6 +41,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 
 
 
@@ -237,11 +118,49 @@ var ReactstrapTable = function (_React$Component) {
       //get field
       var row = data[0];
       var key = Object.keys(row)[ordinal];
+      var val = row[key];
+      var isDate = __WEBPACK_IMPORTED_MODULE_7_moment___default()(val).isValid();
 
-      Object(__WEBPACK_IMPORTED_MODULE_6_lodash__["orderBy"])(data, [key], [sortAscending ? "asc" : "desc"]);
+      //https://stackoverflow.com/a/9716488/1342632
+      var isNumber = !isNaN(parseFloat(val)) && isFinite(val);
 
+      var sortedData;
+
+      console.log(isDate);
+      console.log(isNumber);
+      var comparer = void 0;
+
+      if (isDate) {
+        sortedData = data.sort(function (a, b) {
+          return sortAscending ? new Date(a) - new Date(b) : new Date(b) - new Date(a);
+        });
+      } else if (isNumber) {
+        comparer = function comparer(a, b) {
+          return parseInt(a[key]) - parseInt(b[key]);
+        };
+      } else {
+        comparer = function compare(a, b) {
+          // Use toUpperCase() to ignore character casing
+          var valA = a[key].toUpperCase();
+          var valB = b[key].toUpperCase();
+
+          var comparison = 0;
+          if (valA > valB) {
+            comparison = 1;
+          } else if (valA < valB) {
+            comparison = -1;
+          }
+          return comparison;
+        };
+      }
+
+      sortedData = sortAscending ? data.sort(comparer) : data.reverse(comparer);
+
+      console.log(sortedData.map(function (d) {
+        return d[key];
+      }));
       this.setState({
-        SortedData: Object(__WEBPACK_IMPORTED_MODULE_6_lodash__["orderBy"])(data, [key], [sortAscending ? "asc" : "desc"])
+        SortedData: sortedData
       });
     }
   }, {
@@ -411,21 +330,21 @@ ReactstrapTable.defaultProps = {
 
 /***/ }),
 
-/***/ 49:
+/***/ 174:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_reactstrap__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__fortawesome_react_fontawesome__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__fortawesome_fontawesome_free_solid_faAngleUp__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_reactstrap__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__fortawesome_react_fontawesome__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__fortawesome_fontawesome_free_solid_faAngleUp__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__fortawesome_fontawesome_free_solid_faAngleUp___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__fortawesome_fontawesome_free_solid_faAngleUp__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__fortawesome_fontawesome_free_solid_faAngleDown__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__fortawesome_fontawesome_free_solid_faAngleDown__ = __webpack_require__(21);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__fortawesome_fontawesome_free_solid_faAngleDown___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__fortawesome_fontawesome_free_solid_faAngleDown__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__index_css__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__index_css__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__index_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__index_css__);
 var _this = this;
 
@@ -472,10 +391,10 @@ SortButton.props = {
 
 /***/ }),
 
-/***/ 51:
+/***/ 176:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(52)(false);
+exports = module.exports = __webpack_require__(177)(false);
 // imports
 
 
@@ -487,21 +406,111 @@ exports.push([module.i, ".sort-icon:hover {\n    color: #c2c8d1\n}\n\n.btn-group
 
 /***/ }),
 
-/***/ 55:
+/***/ 18:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return ColumnDefType; });
+/* harmony export (immutable) */ __webpack_exports__["b"] = ColumnDef;
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Column; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return SortableColumn; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_dom__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_dom___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react_dom__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_prop_types__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_prop_types__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__SortButton__ = __webpack_require__(174);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__SortButtonGroup__ = __webpack_require__(180);
+var _this = this;
+
+
+
+
+
+
+
+
+var ColumnDefType = Object(__WEBPACK_IMPORTED_MODULE_2_prop_types__["shape"])({
+  fieldName: __WEBPACK_IMPORTED_MODULE_2_prop_types__["string"].isRequired,
+  headerText: __WEBPACK_IMPORTED_MODULE_2_prop_types__["string"],
+  sortable: __WEBPACK_IMPORTED_MODULE_2_prop_types__["bool"],
+  headerStyle: __WEBPACK_IMPORTED_MODULE_2_prop_types__["object"],
+  clickable: __WEBPACK_IMPORTED_MODULE_2_prop_types__["bool"],
+  hiddenDown: Object(__WEBPACK_IMPORTED_MODULE_2_prop_types__["oneOf"])(["xs", "sm", "md", "lg", "xl"]),
+  tooltipText: __WEBPACK_IMPORTED_MODULE_2_prop_types__["string"]
+});
+
+function ColumnDef(fieldName, headerText, sortable, headerStyle) {
+  if (!fieldName) {
+    throw new Error("fieldName is required");
+  }
+  this.sortable = sortable || false;
+  this.headerText = headerText || "";
+  this.headerStyle = headerStyle || {};
+  this.fieldName = fieldName;
+}
+
+var headerClass = function headerClass(hideDown) {
+  if (hideDown) {
+    return "d-none d-" + hideDown + "-table-cell align-middle";
+  } else {
+    return "align-middle";
+  }
+};
+var Column = function Column(props) {
+  _this.className = headerClass(props.columnDef.hiddenDown);
+  return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+    "th",
+    { style: props.columnDef.headerStyle, className: _this.className },
+    props.children
+  );
+};
+
+var SortableColumn = function SortableColumn(props) {
+  _this.sortClicked = function (ascending) {
+    props.sortClicked(props.ordinal, ascending);
+  };
+
+  _this.className = headerClass(props.columnDef.hiddenDown);
+  return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+    "th",
+    { style: props.columnDef.headerStyle, className: _this.className },
+    props.children,
+    " ",
+    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__SortButtonGroup__["a" /* default */], { sortClicked: _this.sortClicked })
+  );
+};
+
+SortableColumn.propTypes = {
+  sortClicked: __WEBPACK_IMPORTED_MODULE_2_prop_types___default.a.func.isRequired,
+  ordinal: __WEBPACK_IMPORTED_MODULE_2_prop_types___default.a.number.isRequired,
+  columnDef: ColumnDefType.isRequired
+};
+
+Column.propTypes = {
+  ordinal: __WEBPACK_IMPORTED_MODULE_2_prop_types___default.a.number.isRequired,
+  columnDef: ColumnDefType.isRequired,
+  onClick: __WEBPACK_IMPORTED_MODULE_2_prop_types___default.a.func
+};
+
+/***/ }),
+
+/***/ 180:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_reactstrap__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__fortawesome_react_fontawesome__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__fortawesome_fontawesome_free_solid_faAngleUp__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_reactstrap__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__fortawesome_react_fontawesome__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__fortawesome_fontawesome_free_solid_faAngleUp__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__fortawesome_fontawesome_free_solid_faAngleUp___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__fortawesome_fontawesome_free_solid_faAngleUp__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__fortawesome_fontawesome_free_solid_faAngleDown__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__fortawesome_fontawesome_free_solid_faAngleDown__ = __webpack_require__(21);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__fortawesome_fontawesome_free_solid_faAngleDown___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__fortawesome_fontawesome_free_solid_faAngleDown__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__index_css__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__index_css__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__index_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__index_css__);
 var _this = this;
 
@@ -559,16 +568,16 @@ SortButton.props = {
 
 /***/ }),
 
-/***/ 56:
+/***/ 181:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_reactstrap__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Columns__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_reactstrap__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Columns__ = __webpack_require__(18);
 var _this = this;
 
 
@@ -578,7 +587,6 @@ var _this = this;
 
 var TableCell = function TableCell(props) {
   _this.cellClicked = function (e) {
-    console.log(e);
     e.preventDefault();
     if (props.onClick) {
       props.onClick(e.currentTarget.attributes["data-fieldname"].value, e.target.text);
@@ -611,14 +619,46 @@ var TableCell = function TableCell(props) {
 };
 
 TableCell.propTypes = {
-  columnDef: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.instanceOf(__WEBPACK_IMPORTED_MODULE_3__Columns__["default"]).isRequired,
+  columnDef: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.shape(__WEBPACK_IMPORTED_MODULE_3__Columns__["default"]).isRequired,
   onClick: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func,
   id: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string.isRequired
 };
 
 /* harmony default export */ __webpack_exports__["a"] = (TableCell);
 
+/***/ }),
+
+/***/ 22:
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(176);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// Prepare cssTransformation
+var transform;
+
+var options = {"hmr":true}
+options.transform = transform
+// add the styles to the DOM
+var update = __webpack_require__(178)(content, options);
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../node_modules/css-loader/index.js!./index.css", function() {
+			var newContent = require("!!../node_modules/css-loader/index.js!./index.css");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
 /***/ })
 
-},[22]);
+},[147]);
 });
