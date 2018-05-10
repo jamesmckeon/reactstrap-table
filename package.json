@@ -1,6 +1,6 @@
 {
-    "name": "reactstrap-table",
-    "version": "1.0.1",
+    "name": "@jbmckeon/reactstrap-table",
+    "version": "1.0.2",
     "license": "MIT",
     "author": {
         "name": "James McKeon",
