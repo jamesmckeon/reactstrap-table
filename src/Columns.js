@@ -1,9 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import FontAwesomeIcon from "@fortawesome/react-fontawesome";
-import UpIcon from "@fortawesome/fontawesome-free-solid/faChevronUp";
-import DownIcon from "@fortawesome/fontawesome-free-solid/faChevronDown";
 import PropTypes from "prop-types";
+import SortButton from "SortButton";
 import {
   shape,
   number,
@@ -16,9 +14,10 @@ import {
 
 export const ColumnDefType = shape({
   fieldName: string.isRequired,
-  headerText: number,
+  headerText: string,
   sortable: bool,
-  headerStyle: object
+  headerStyle: object,
+  clickable: bool
 });
 
 export function ColumnDef(fieldName, headerText, sortable, headerStyle) {
@@ -28,15 +27,12 @@ export function ColumnDef(fieldName, headerText, sortable, headerStyle) {
   this.sortable = sortable || false;
   this.headerText = headerText || "";
   this.headerStyle = headerStyle || {};
+  this.fieldName = fieldName;
 }
 
 export const Column = props => {
   return (
-    <th
-      key={props.ordinal}
-      style={props.columnDef.headerStyle}
-      onClick={props.onClick}
-    >
+    <th key={props.ordinal} style={props.columnDef.headerStyle}>
       {props.children}
     </th>
   );
@@ -45,30 +41,24 @@ export const Column = props => {
 export class SortableColumn extends React.Component {
   constructor(props, context) {
     super(props, context);
-    this.state = { Asc: true };
-    this.onClick = this.onClick.bind(this);
+
+    this.sortClicked = this.sortClicked.bind(this);
   }
 
-  onClick(e) {
-    this.props.sortToggled(this.props.ordinal, this.state.Asc);
-    this.setState({ Asc: !this.state.Asc });
+  sortClicked(ascending) {
+    this.props.sortClicked(this.props.ordinal, ascending);
   }
   render() {
     return (
-      <Column
-        key={this.props.ordinal}
-        columnDef={this.props.columnDef}
-        onClick={this.onClick}
-      >
-        {this.props.children}{" "}
-        <FontAwesomeIcon icon={this.state.Asc ? UpIcon : DownIcon} />
+      <Column key={this.props.ordinal} columnDef={this.props.columnDef}>
+        {this.props.children} <SortButton sortClicked={this.sortClicked} />
       </Column>
     );
   }
 }
 
 SortableColumn.propTypes = {
-  sortToggled: PropTypes.func.isRequired,
+  sortClicked: PropTypes.func.isRequired,
   ordinal: PropTypes.number.isRequired,
   columnDef: ColumnDefType.isRequired
 };

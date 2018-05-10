@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import Pager from "reactstrap-pager";
 import { Table } from "reactstrap";
-import { Column, SortableColumn, ColumnDef, ColumnDefType } from "./Columns";
+import { Column, SortableColumn, ColumnDef, ColumnDefType } from "Columns";
 import { orderBy } from "lodash";
 
 export { ColumnDefType };
@@ -20,18 +20,20 @@ export class ReactstrapTable extends React.Component {
   constructor(props, context) {
     super(props, context);
 
-    this.getColumns = this.getColumns.bind(this);
     this.getBody = this.getBody.bind(this);
     this.getHeaders = this.getHeaders.bind(this);
     this.hasData = this.hasData.bind(this);
     this.totalPages = this.totalPages.bind(this);
     this.pageChanged = this.pageChanged.bind(this);
     this.sortClicked = this.sortClicked.bind(this);
+    this.getColumnDef = this.getColumnDef.bind(this);
+    this.cellClicked = this.cellClicked.bind(this);
     this.state = {
       HasData: this.hasData(),
       TotalPages: this.totalPages(),
       CurrentPage: 1,
-      SortedData: this.props.data
+      SortedData: this.props.data,
+      ColumnDefs: this.getColumnDefs(this.props.data)
     };
   }
 
@@ -46,6 +48,9 @@ export class ReactstrapTable extends React.Component {
     this.setState({ CurrentPage: pageNum });
   }
 
+  componentWillReceiveProps(newProps) {
+    this.setState({ ColumnDefs: this.getColumnDefs(newProps.Data) });
+  }
   sortClicked(ordinal, sortAscending) {
     const data = this.state.SortedData;
     //get field
@@ -58,18 +63,31 @@ export class ReactstrapTable extends React.Component {
       SortedData: orderBy(data, [key], [sortAscending ? "asc" : "desc"])
     });
   }
+
+  getColumnDef(fieldName) {
+    return this.state.ColumnDefs.find(def => {
+      return def.fieldName === fieldName;
+    });
+  }
   //builds column defs
-  getColumns() {
-    if (!this.state.HasData) {
+  getColumnDefs(data) {
+    if (!data || data.length === 0) {
       return [];
     }
     //no columndefs provided, use first row in data
-    const row = this.props.data[0];
+    const row = data[0];
 
     return Object.keys(row).map((r, i) => {
+      //find columnDef based on field name
+      const def =
+        this.props.columnDefs &&
+        this.props.columnDefs.find(d => {
+          return d.fieldName === r;
+        });
+
       //if a column def has been provided for this ordinal, use it
-      if (this.props.columnDefs && this.props.columnDefs[i]) {
-        return this.props.columnDefs[i];
+      if (def) {
+        return def;
       } else {
         return new ColumnDef(r, r);
       }
@@ -79,13 +97,13 @@ export class ReactstrapTable extends React.Component {
   getHeaders() {
     return (
       <tr>
-        {this.getColumns().map((c, i) => {
+        {this.state.ColumnDefs.map((c, i) => {
           if (c.sortable) {
             return (
               <SortableColumn
                 ordinal={i}
                 columnDef={c}
-                sortToggled={this.sortClicked}
+                sortClicked={this.sortClicked}
               >
                 {c.headerText}
               </SortableColumn>
@@ -102,6 +120,15 @@ export class ReactstrapTable extends React.Component {
     );
   }
 
+  cellClicked(e) {
+    e.preventDefault();
+    if (this.props.cellClicked) {
+      this.props.cellClicked(
+        e.currentTarget.attributes["data-fieldname"].value,
+        e.target.text
+      );
+    }
+  }
   getBody() {
     if (!this.state.HasData) {
       return [];
@@ -112,7 +139,21 @@ export class ReactstrapTable extends React.Component {
       return (
         <tr key={i}>
           {Object.keys(row).map(key => {
-            return <td>{row[key].toString()}</td>;
+            const def = this.getColumnDef(key);
+
+            return def.clickable ? (
+              <td>
+                <a
+                  data-fieldname={def.fieldName}
+                  href=""
+                  onClick={this.cellClicked}
+                >
+                  {row[key].toString()}
+                </a>
+              </td>
+            ) : (
+              <td>{row[key].toString()}</td>
+            );
           })}
         </tr>
       );
@@ -148,7 +189,8 @@ export class ReactstrapTable extends React.Component {
 ReactstrapTable.propTypes = {
   hidden: PropTypes.bool,
   pagesDisplayed: PropTypes.number,
-  columnDefs: PropTypes.arrayOf(ColumnDefType)
+  columnDefs: PropTypes.arrayOf(ColumnDefType),
+  cellClicked: PropTypes.func
 };
 
 ReactstrapTable.defaultProps = {
