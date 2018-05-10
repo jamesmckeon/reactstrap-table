@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import Pager from "reactstrap-pager";
 import { Table } from "reactstrap";
 import { Column, SortableColumn, ColumnDef, ColumnDefType } from "./Columns";
+import TableCell from "./TableCell";
 import { orderBy } from "lodash";
 
 const CenteredText = props => {
@@ -25,7 +26,7 @@ export default class ReactstrapTable extends React.Component {
     this.pageChanged = this.pageChanged.bind(this);
     this.sortClicked = this.sortClicked.bind(this);
     this.getColumnDef = this.getColumnDef.bind(this);
-    this.cellClicked = this.cellClicked.bind(this);
+
     this.state = {
       HasData: this.hasData(),
       TotalPages: this.totalPages(),
@@ -119,15 +120,6 @@ export default class ReactstrapTable extends React.Component {
     );
   }
 
-  cellClicked(e) {
-    e.preventDefault();
-    if (this.props.cellClicked) {
-      this.props.cellClicked(
-        e.currentTarget.attributes["data-fieldname"].value,
-        e.target.text
-      );
-    }
-  }
   getBody() {
     if (!this.state.HasData) {
       return [];
@@ -140,18 +132,15 @@ export default class ReactstrapTable extends React.Component {
           {Object.keys(row).map((key, j) => {
             const def = this.getColumnDef(key);
 
-            return def.clickable ? (
-              <td key={j}>
-                <a
-                  data-fieldname={def.fieldName}
-                  href=""
-                  onClick={this.cellClicked}
-                >
-                  {row[key].toString()}
-                </a>
-              </td>
-            ) : (
-              <td key={j}>{row[key].toString()}</td>
+            return (
+              <TableCell
+                id={`r${i}c${j}`}
+                key={j}
+                onClick={this.props.cellClicked}
+                columnDef={def}
+              >
+                {row[key].toString()}
+              </TableCell>
             );
           })}
         </tr>
@@ -206,7 +195,11 @@ ReactstrapTable.propTypes = {
   striped: PropTypes.bool,
   dark: PropTypes.bool,
   hover: PropTypes.bool,
-  responsive: PropTypes.bool
+  responsive: PropTypes.bool,
+  columnDefs: PropTypes.arrayOf(ColumnDefType),
+  //valid JSON
+  data: PropTypes.array,
+  cellClicked: PropTypes.func
 };
 
 ReactstrapTable.defaultProps = {

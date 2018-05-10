@@ -16,15 +16,20 @@ const SortButton = props => {
     props.sortClicked(false);
   };
   return (
-    <ButtonGroup vertical size="sm" style={{ marginLeft: ".5em" }}>
-      <Button onClick={this.upClicked}>
+    <ButtonGroup
+      vertical
+      size="sm"
+      style={{ marginLeft: ".5em" }}
+      className="float-right"
+    >
+      <Button outline onClick={this.upClicked}>
         <FontAwesomeIcon
           icon={UpIcon}
           transform={iconSize}
           //className="sort-icon"
         />
       </Button>
-      <Button onClick={this.downClicked}>
+      <Button outline onClick={this.downClicked}>
         <FontAwesomeIcon
           icon={DownIcon}
           transform={iconSize}

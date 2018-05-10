@@ -19,7 +19,8 @@ export const ColumnDefType = shape({
   sortable: bool,
   headerStyle: object,
   clickable: bool,
-  hiddenDown: oneOf(["xs", "sm", "md", "lg", "xl"])
+  hiddenDown: oneOf(["xs", "sm", "md", "lg", "xl"]),
+  tooltipText: string
 });
 
 export function ColumnDef(fieldName, headerText, sortable, headerStyle) {
