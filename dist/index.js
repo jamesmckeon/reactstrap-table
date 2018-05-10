@@ -10,23 +10,21 @@
 })(typeof self !== 'undefined' ? self : this, function() {
 return webpackJsonpreactstrap_table([1],{
 
-/***/ 16:
+/***/ 17:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ReactstrapTable", function() { return ReactstrapTable; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_reactstrap_pager__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_reactstrap_pager__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_reactstrap_pager___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_reactstrap_pager__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_reactstrap__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_reactstrap__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Columns__ = __webpack_require__(44);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_lodash__ = __webpack_require__(49);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_lodash__ = __webpack_require__(55);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_lodash__);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "ColumnDefType", function() { return __WEBPACK_IMPORTED_MODULE_4__Columns__["c"]; });
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -44,7 +42,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 
 
-
+//export { ColumnDefType };
 
 var CenteredText = function CenteredText(props) {
   return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -69,18 +67,20 @@ var ReactstrapTable = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (ReactstrapTable.__proto__ || Object.getPrototypeOf(ReactstrapTable)).call(this, props, context));
 
-    _this.getColumns = _this.getColumns.bind(_this);
     _this.getBody = _this.getBody.bind(_this);
     _this.getHeaders = _this.getHeaders.bind(_this);
     _this.hasData = _this.hasData.bind(_this);
     _this.totalPages = _this.totalPages.bind(_this);
     _this.pageChanged = _this.pageChanged.bind(_this);
     _this.sortClicked = _this.sortClicked.bind(_this);
+    _this.getColumnDef = _this.getColumnDef.bind(_this);
+    _this.cellClicked = _this.cellClicked.bind(_this);
     _this.state = {
       HasData: _this.hasData(),
       TotalPages: _this.totalPages(),
       CurrentPage: 1,
-      SortedData: _this.props.data
+      SortedData: _this.props.data,
+      ColumnDefs: _this.getColumnDefs(_this.props.data)
     };
     return _this;
   }
@@ -100,6 +100,11 @@ var ReactstrapTable = function (_React$Component) {
       this.setState({ CurrentPage: pageNum });
     }
   }, {
+    key: "componentWillReceiveProps",
+    value: function componentWillReceiveProps(newProps) {
+      this.setState({ ColumnDefs: this.getColumnDefs(newProps.Data) });
+    }
+  }, {
     key: "sortClicked",
     value: function sortClicked(ordinal, sortAscending) {
       var data = this.state.SortedData;
@@ -113,23 +118,35 @@ var ReactstrapTable = function (_React$Component) {
         SortedData: Object(__WEBPACK_IMPORTED_MODULE_5_lodash__["orderBy"])(data, [key], [sortAscending ? "asc" : "desc"])
       });
     }
+  }, {
+    key: "getColumnDef",
+    value: function getColumnDef(fieldName) {
+      return this.state.ColumnDefs.find(function (def) {
+        return def.fieldName === fieldName;
+      });
+    }
     //builds column defs
 
   }, {
-    key: "getColumns",
-    value: function getColumns() {
+    key: "getColumnDefs",
+    value: function getColumnDefs(data) {
       var _this2 = this;
 
-      if (!this.state.HasData) {
+      if (!data || data.length === 0) {
         return [];
       }
       //no columndefs provided, use first row in data
-      var row = this.props.data[0];
+      var row = data[0];
 
       return Object.keys(row).map(function (r, i) {
+        //find columnDef based on field name
+        var def = _this2.props.columnDefs && _this2.props.columnDefs.find(function (d) {
+          return d.fieldName === r;
+        });
+
         //if a column def has been provided for this ordinal, use it
-        if (_this2.props.columnDefs && _this2.props.columnDefs[i]) {
-          return _this2.props.columnDefs[i];
+        if (def) {
+          return def;
         } else {
           return new __WEBPACK_IMPORTED_MODULE_4__Columns__["b" /* ColumnDef */](r, r);
         }
@@ -143,14 +160,14 @@ var ReactstrapTable = function (_React$Component) {
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         "tr",
         null,
-        this.getColumns().map(function (c, i) {
+        this.state.ColumnDefs.map(function (c, i) {
           if (c.sortable) {
             return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
               __WEBPACK_IMPORTED_MODULE_4__Columns__["d" /* SortableColumn */],
               {
                 ordinal: i,
                 columnDef: c,
-                sortToggled: _this3.sortClicked
+                sortClicked: _this3.sortClicked
               },
               c.headerText
             );
@@ -165,8 +182,18 @@ var ReactstrapTable = function (_React$Component) {
       );
     }
   }, {
+    key: "cellClicked",
+    value: function cellClicked(e) {
+      e.preventDefault();
+      if (this.props.cellClicked) {
+        this.props.cellClicked(e.currentTarget.attributes["data-fieldname"].value, e.target.text);
+      }
+    }
+  }, {
     key: "getBody",
     value: function getBody() {
+      var _this4 = this;
+
       if (!this.state.HasData) {
         return [];
       }
@@ -177,7 +204,21 @@ var ReactstrapTable = function (_React$Component) {
           "tr",
           { key: i },
           Object.keys(row).map(function (key) {
-            return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            var def = _this4.getColumnDef(key);
+
+            return def.clickable ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+              "td",
+              null,
+              __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                "a",
+                {
+                  "data-fieldname": def.fieldName,
+                  href: "",
+                  onClick: _this4.cellClicked
+                },
+                row[key].toString()
+              )
+            ) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
               "td",
               null,
               row[key].toString()
@@ -225,10 +266,14 @@ var ReactstrapTable = function (_React$Component) {
   return ReactstrapTable;
 }(__WEBPACK_IMPORTED_MODULE_0_react___default.a.Component);
 
+/* harmony default export */ __webpack_exports__["default"] = (ReactstrapTable);
+
+
 ReactstrapTable.propTypes = {
   hidden: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.bool,
   pagesDisplayed: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.number,
-  columnDefs: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.arrayOf(__WEBPACK_IMPORTED_MODULE_4__Columns__["c" /* ColumnDefType */])
+  columnDefs: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.arrayOf(__WEBPACK_IMPORTED_MODULE_4__Columns__["c" /* ColumnDefType */]),
+  cellClicked: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func
 };
 
 ReactstrapTable.defaultProps = {
@@ -247,15 +292,11 @@ ReactstrapTable.defaultProps = {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return SortableColumn; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_dom__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_dom__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_dom___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react_dom__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__fortawesome_react_fontawesome__ = __webpack_require__(45);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__fortawesome_fontawesome_free_solid_faChevronUp__ = __webpack_require__(47);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__fortawesome_fontawesome_free_solid_faChevronUp___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__fortawesome_fontawesome_free_solid_faChevronUp__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__fortawesome_fontawesome_free_solid_faChevronDown__ = __webpack_require__(48);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__fortawesome_fontawesome_free_solid_faChevronDown___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__fortawesome_fontawesome_free_solid_faChevronDown__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_prop_types__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_prop_types__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_prop_types__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_prop_types__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__SortButton__ = __webpack_require__(45);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -270,13 +311,12 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 
 
-
-
-var ColumnDefType = Object(__WEBPACK_IMPORTED_MODULE_5_prop_types__["shape"])({
-  fieldName: __WEBPACK_IMPORTED_MODULE_5_prop_types__["string"].isRequired,
-  headerText: __WEBPACK_IMPORTED_MODULE_5_prop_types__["number"],
-  sortable: __WEBPACK_IMPORTED_MODULE_5_prop_types__["bool"],
-  headerStyle: __WEBPACK_IMPORTED_MODULE_5_prop_types__["object"]
+var ColumnDefType = Object(__WEBPACK_IMPORTED_MODULE_2_prop_types__["shape"])({
+  fieldName: __WEBPACK_IMPORTED_MODULE_2_prop_types__["string"].isRequired,
+  headerText: __WEBPACK_IMPORTED_MODULE_2_prop_types__["string"],
+  sortable: __WEBPACK_IMPORTED_MODULE_2_prop_types__["bool"],
+  headerStyle: __WEBPACK_IMPORTED_MODULE_2_prop_types__["object"],
+  clickable: __WEBPACK_IMPORTED_MODULE_2_prop_types__["bool"]
 });
 
 function ColumnDef(fieldName, headerText, sortable, headerStyle) {
@@ -286,16 +326,13 @@ function ColumnDef(fieldName, headerText, sortable, headerStyle) {
   this.sortable = sortable || false;
   this.headerText = headerText || "";
   this.headerStyle = headerStyle || {};
+  this.fieldName = fieldName;
 }
 
 var Column = function Column(props) {
   return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
     "th",
-    {
-      key: props.ordinal,
-      style: props.columnDef.headerStyle,
-      onClick: props.onClick
-    },
+    { key: props.ordinal, style: props.columnDef.headerStyle },
     props.children
   );
 };
@@ -308,30 +345,24 @@ var SortableColumn = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (SortableColumn.__proto__ || Object.getPrototypeOf(SortableColumn)).call(this, props, context));
 
-    _this.state = { Asc: true };
-    _this.onClick = _this.onClick.bind(_this);
+    _this.sortClicked = _this.sortClicked.bind(_this);
     return _this;
   }
 
   _createClass(SortableColumn, [{
-    key: "onClick",
-    value: function onClick(e) {
-      this.props.sortToggled(this.props.ordinal, this.state.Asc);
-      this.setState({ Asc: !this.state.Asc });
+    key: "sortClicked",
+    value: function sortClicked(ascending) {
+      this.props.sortClicked(this.props.ordinal, ascending);
     }
   }, {
     key: "render",
     value: function render() {
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         Column,
-        {
-          key: this.props.ordinal,
-          columnDef: this.props.columnDef,
-          onClick: this.onClick
-        },
+        { key: this.props.ordinal, columnDef: this.props.columnDef },
         this.props.children,
         " ",
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__fortawesome_react_fontawesome__["a" /* default */], { icon: this.state.Asc ? __WEBPACK_IMPORTED_MODULE_3__fortawesome_fontawesome_free_solid_faChevronUp___default.a : __WEBPACK_IMPORTED_MODULE_4__fortawesome_fontawesome_free_solid_faChevronDown___default.a })
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__SortButton__["a" /* default */], { sortClicked: this.sortClicked })
       );
     }
   }]);
@@ -340,18 +371,124 @@ var SortableColumn = function (_React$Component) {
 }(__WEBPACK_IMPORTED_MODULE_0_react___default.a.Component);
 
 SortableColumn.propTypes = {
-  sortToggled: __WEBPACK_IMPORTED_MODULE_5_prop_types___default.a.func.isRequired,
-  ordinal: __WEBPACK_IMPORTED_MODULE_5_prop_types___default.a.number.isRequired,
+  sortClicked: __WEBPACK_IMPORTED_MODULE_2_prop_types___default.a.func.isRequired,
+  ordinal: __WEBPACK_IMPORTED_MODULE_2_prop_types___default.a.number.isRequired,
   columnDef: ColumnDefType.isRequired
 };
 
 Column.propTypes = {
-  ordinal: __WEBPACK_IMPORTED_MODULE_5_prop_types___default.a.number.isRequired,
+  ordinal: __WEBPACK_IMPORTED_MODULE_2_prop_types___default.a.number.isRequired,
   columnDef: ColumnDefType.isRequired,
-  onClick: __WEBPACK_IMPORTED_MODULE_5_prop_types___default.a.func
+  onClick: __WEBPACK_IMPORTED_MODULE_2_prop_types___default.a.func
 };
+
+/***/ }),
+
+/***/ 45:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_reactstrap__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__fortawesome_react_fontawesome__ = __webpack_require__(46);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__fortawesome_fontawesome_free_solid_faAngleUp__ = __webpack_require__(48);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__fortawesome_fontawesome_free_solid_faAngleUp___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__fortawesome_fontawesome_free_solid_faAngleUp__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__fortawesome_fontawesome_free_solid_faAngleDown__ = __webpack_require__(49);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__fortawesome_fontawesome_free_solid_faAngleDown___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__fortawesome_fontawesome_free_solid_faAngleDown__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__index_css__ = __webpack_require__(50);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__index_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__index_css__);
+var _this = this;
+
+
+
+
+
+
+
+
+var iconSize = "shrink-3";
+var SortButton = function SortButton(props) {
+  _this.upClicked = function () {
+    props.sortClicked(true);
+  };
+  _this.downClicked = function () {
+    props.sortClicked(false);
+  };
+  return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+    "div",
+    { className: "d-inline" },
+    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__fortawesome_react_fontawesome__["a" /* default */], {
+      icon: __WEBPACK_IMPORTED_MODULE_4__fortawesome_fontawesome_free_solid_faAngleUp___default.a,
+      onClick: _this.upClicked,
+      transform: iconSize,
+      className: "sort-icon"
+    }),
+    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__fortawesome_react_fontawesome__["a" /* default */], {
+      icon: __WEBPACK_IMPORTED_MODULE_5__fortawesome_fontawesome_free_solid_faAngleDown___default.a,
+      onClick: _this.downClicked,
+      transform: iconSize,
+      className: "sort-icon"
+    })
+  );
+};
+
+SortButton.props = {
+  sortClicked: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.func.isRequired
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (SortButton);
+
+/***/ }),
+
+/***/ 50:
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(51);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// Prepare cssTransformation
+var transform;
+
+var options = {"hmr":true}
+options.transform = transform
+// add the styles to the DOM
+var update = __webpack_require__(53)(content, options);
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../node_modules/css-loader/index.js!./index.css", function() {
+			var newContent = require("!!../node_modules/css-loader/index.js!./index.css");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+
+/***/ 51:
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(52)(false);
+// imports
+
+
+// module
+exports.push([module.i, ".sort-icon:hover {\n    color: #c2c8d1\n}", ""]);
+
+// exports
+
 
 /***/ })
 
-},[16]);
+},[17]);
 });

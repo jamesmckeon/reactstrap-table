@@ -5,7 +5,7 @@ import { Table } from "reactstrap";
 import { Column, SortableColumn, ColumnDef, ColumnDefType } from "./Columns";
 import { orderBy } from "lodash";
 
-export { ColumnDefType };
+//export { ColumnDefType };
 
 const CenteredText = props => {
   return (
@@ -16,7 +16,7 @@ const CenteredText = props => {
   );
 };
 
-export class ReactstrapTable extends React.Component {
+export default class ReactstrapTable extends React.Component {
   constructor(props, context) {
     super(props, context);
 
