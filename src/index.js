@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import Pager from "reactstrap-pager";
 import { Table } from "reactstrap";
-import { Column, SortableColumn, ColumnDef, ColumnDefType } from "Columns";
+import { Column, SortableColumn, ColumnDef, ColumnDefType } from "./Columns";
 import { orderBy } from "lodash";
 
 export { ColumnDefType };
