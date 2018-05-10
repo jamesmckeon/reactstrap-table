@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import SortButton from "./SortButton";
+import SortButtonGroup from "./SortButtonGroup";
 import {
   shape,
   number,
@@ -17,7 +18,8 @@ export const ColumnDefType = shape({
   headerText: string,
   sortable: bool,
   headerStyle: object,
-  clickable: bool
+  clickable: bool,
+  hiddenDown: oneOf(["xs", "sm", "md", "lg", "xl"])
 });
 
 export function ColumnDef(fieldName, headerText, sortable, headerStyle) {
@@ -30,18 +32,31 @@ export function ColumnDef(fieldName, headerText, sortable, headerStyle) {
   this.fieldName = fieldName;
 }
 
+const headerClass = hideDown => {
+  if (hideDown) {
+    return `d-none d-${hideDown}-table-cell align-middle`;
+  } else {
+    return "align-middle";
+  }
+};
 export const Column = props => {
-  return <th style={props.columnDef.headerStyle}>{props.children}</th>;
+  this.className = headerClass(props.columnDef.hiddenDown);
+  return (
+    <th style={props.columnDef.headerStyle} className={this.className}>
+      {props.children}
+    </th>
+  );
 };
 
 export const SortableColumn = props => {
   this.sortClicked = ascending => {
-    this.props.sortClicked(props.ordinal, ascending);
+    props.sortClicked(props.ordinal, ascending);
   };
 
+  this.className = headerClass(props.columnDef.hiddenDown);
   return (
-    <th style={props.columnDef.headerStyle}>
-      {props.children} <SortButton sortClicked={this.sortClicked} />
+    <th style={props.columnDef.headerStyle} className={this.className}>
+      {props.children} <SortButtonGroup sortClicked={this.sortClicked} />
     </th>
   );
 };
