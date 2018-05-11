@@ -9,6 +9,6 @@ export default {
   },
 
   styleTableCell: function(columnDef) {
-    return styleTableCell(columnDef) + " align-middle";
+    return styleTableCell(columnDef);
   }
 };
