@@ -4,7 +4,6 @@ import Pager from "reactstrap-pager";
 import { Table } from "reactstrap";
 import { Column, SortableColumn, ColumnDef, ColumnDefType } from "./Columns";
 import TableCell from "./TableCell";
-import { orderBy } from "lodash";
 import moment from "moment";
 
 const CenteredText = props => {

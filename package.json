@@ -1,6 +1,6 @@
 {
     "name": "@jbmckeon/reactstrap-table",
-    "version": "1.0.3",
+    "version": "1.0.5",
     "license": "MIT",
     "author": {
         "name": "James McKeon",
@@ -20,10 +20,9 @@
         "start": ""
     },
     "dependencies": {
-        "@fortawesome/fontawesome": "^1.1.7",
-        "@fortawesome/fontawesome-free-solid": "^5.0.12",
+        "@fortawesome/fontawesome": "^1.1.8",
+        "@fortawesome/fontawesome-free-solid": "^5.0.13",
         "@fortawesome/react-fontawesome": "0.0.19",
-        "lodash": "^4.17.10",
         "moment": "^2.22.1",
         "react": "^16.0.0",
         "react-dom": "^16.0.0",
@@ -45,9 +44,9 @@
         "eslint-plugin-react": "^7.4.0",
         "jest": "^21.2.1",
         "react-hot-loader": "next",
-        "sinon": "^5.0.4",
+        "sinon": "^5.0.7",
         "style-loader": "^0.19.0",
-        "webpack": "^3.8.1",
+        "webpack": "^3.12.0",
         "webpack-dev-server": "^2.4.5"
     },
     "jest": {

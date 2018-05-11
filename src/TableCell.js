@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { UncontrolledTooltip } from "reactstrap";
-import ColumnDefType from "./Columns";
+import { ColumnDefType } from "./Columns";
 import StyleBuilder from "./StyleBuilder";
 
 const cellClass = hideDown => {
