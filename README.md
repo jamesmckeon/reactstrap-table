@@ -28,6 +28,6 @@ ReactstrapTable.defaultProps = {
   sortable: bool,
   headerStyle: object,
   clickable: bool,
-  hiddenDown: oneOf(["xs", "sm", "md", "lg", "xl"])
+  hiddenBelow: oneOf(["sm", "md", "lg", "xl"])
 });
 ```

@@ -2,6 +2,15 @@ import React from "react";
 import PropTypes from "prop-types";
 import { UncontrolledTooltip } from "reactstrap";
 import ColumnDefType from "./Columns";
+import StyleBuilder from "./StyleBuilder";
+
+const cellClass = hideDown => {
+  if (hideDown) {
+    return `d-none d-${hideDown}-table-cell`;
+  } else {
+    return "align-middle";
+  }
+};
 
 const TableCell = props => {
   this.cellClicked = e => {
@@ -15,7 +24,7 @@ const TableCell = props => {
   };
 
   return props.columnDef.clickable ? (
-    <td>
+    <td className={StyleBuilder.styleTableCell(props.columnDef)}>
       <a
         data-fieldname={props.columnDef.fieldName}
         href=""

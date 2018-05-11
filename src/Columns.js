@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import SortButton from "./SortButton";
+import StyleBuilder from "./StyleBuilder";
 import SortButtonGroup from "./SortButtonGroup";
 import {
   shape,
@@ -19,7 +20,8 @@ export const ColumnDefType = shape({
   sortable: bool,
   headerStyle: object,
   clickable: bool,
-  hiddenDown: oneOf(["xs", "sm", "md", "lg", "xl"]),
+  //column will be hidden on breakpoints lower than this
+  hiddenBelow: oneOf(["sm", "md", "lg", "xl"]),
   tooltipText: string
 });
 
@@ -33,15 +35,8 @@ export function ColumnDef(fieldName, headerText, sortable, headerStyle) {
   this.fieldName = fieldName;
 }
 
-const headerClass = hideDown => {
-  if (hideDown) {
-    return `d-none d-${hideDown}-table-cell align-middle`;
-  } else {
-    return "align-middle";
-  }
-};
 export const Column = props => {
-  this.className = headerClass(props.columnDef.hiddenDown);
+  this.className = StyleBuilder.styleTableHeader(props.columnDef);
   return (
     <th style={props.columnDef.headerStyle} className={this.className}>
       {props.children}
@@ -54,7 +49,7 @@ export const SortableColumn = props => {
     props.sortClicked(props.ordinal, ascending);
   };
 
-  this.className = headerClass(props.columnDef.hiddenDown);
+  this.className = StyleBuilder.styleTableHeader(props.columnDef);
   return (
     <th style={props.columnDef.headerStyle} className={this.className}>
       {props.children} <SortButtonGroup sortClicked={this.sortClicked} />

@@ -10,7 +10,7 @@
 })(typeof self !== 'undefined' ? self : this, function() {
 return webpackJsonp_jbmckeon_reactstrap_table([1],{
 
-/***/ 147:
+/***/ 148:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -19,12 +19,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_reactstrap_pager__ = __webpack_require__(152);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_reactstrap_pager__ = __webpack_require__(153);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_reactstrap_pager___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_reactstrap_pager__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_reactstrap__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Columns__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__TableCell__ = __webpack_require__(181);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_lodash__ = __webpack_require__(182);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__TableCell__ = __webpack_require__(182);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_lodash__ = __webpack_require__(183);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_lodash__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_moment__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_moment__);
@@ -118,6 +118,7 @@ var ReactstrapTable = function (_React$Component) {
       //https://stackoverflow.com/a/9716488/1342632
       var isNumber = !isNaN(parseFloat(val)) && isFinite(val);
 
+      //number check has to preceed date check, as JS will convert numbers to dates
       if (isNumber) {
         return function (a, b) {
           return parseFloat(a[fieldName]) - parseFloat(b[fieldName]);
@@ -151,19 +152,12 @@ var ReactstrapTable = function (_React$Component) {
       //get field
       var row = data[0];
       var key = Object.keys(row)[ordinal];
-
       var val = row[key];
-
-      var sortedData;
 
       var comparer = this.getSortComparer(key, val);
 
       sortAscending ? data.sort(comparer) : data.reverse(comparer);
-      //sortedData = sortAscending ? data.sort(comparer) : data.reverse(comparer);
 
-      console.log(data.map(function (d) {
-        return d[key];
-      }));
       this.setState({
         SortedData: data
       });
@@ -335,7 +329,7 @@ ReactstrapTable.defaultProps = {
 
 /***/ }),
 
-/***/ 174:
+/***/ 175:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -396,10 +390,10 @@ SortButton.props = {
 
 /***/ }),
 
-/***/ 176:
+/***/ 177:
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(177)(false);
+exports = module.exports = __webpack_require__(178)(false);
 // imports
 
 
@@ -425,9 +419,11 @@ exports.push([module.i, ".sort-icon:hover {\n    color: #c2c8d1\n}\n\n.btn-group
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_dom___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react_dom__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_prop_types__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_prop_types__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__SortButton__ = __webpack_require__(174);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__SortButtonGroup__ = __webpack_require__(180);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__SortButton__ = __webpack_require__(175);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__StyleBuilder__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__SortButtonGroup__ = __webpack_require__(181);
 var _this = this;
+
 
 
 
@@ -442,7 +438,8 @@ var ColumnDefType = Object(__WEBPACK_IMPORTED_MODULE_2_prop_types__["shape"])({
   sortable: __WEBPACK_IMPORTED_MODULE_2_prop_types__["bool"],
   headerStyle: __WEBPACK_IMPORTED_MODULE_2_prop_types__["object"],
   clickable: __WEBPACK_IMPORTED_MODULE_2_prop_types__["bool"],
-  hiddenDown: Object(__WEBPACK_IMPORTED_MODULE_2_prop_types__["oneOf"])(["xs", "sm", "md", "lg", "xl"]),
+  //column will be hidden on breakpoints lower than this
+  hiddenBelow: Object(__WEBPACK_IMPORTED_MODULE_2_prop_types__["oneOf"])(["sm", "md", "lg", "xl"]),
   tooltipText: __WEBPACK_IMPORTED_MODULE_2_prop_types__["string"]
 });
 
@@ -456,15 +453,8 @@ function ColumnDef(fieldName, headerText, sortable, headerStyle) {
   this.fieldName = fieldName;
 }
 
-var headerClass = function headerClass(hideDown) {
-  if (hideDown) {
-    return "d-none d-" + hideDown + "-table-cell align-middle";
-  } else {
-    return "align-middle";
-  }
-};
 var Column = function Column(props) {
-  _this.className = headerClass(props.columnDef.hiddenDown);
+  _this.className = __WEBPACK_IMPORTED_MODULE_4__StyleBuilder__["a" /* default */].styleTableHeader(props.columnDef);
   return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
     "th",
     { style: props.columnDef.headerStyle, className: _this.className },
@@ -477,13 +467,13 @@ var SortableColumn = function SortableColumn(props) {
     props.sortClicked(props.ordinal, ascending);
   };
 
-  _this.className = headerClass(props.columnDef.hiddenDown);
+  _this.className = __WEBPACK_IMPORTED_MODULE_4__StyleBuilder__["a" /* default */].styleTableHeader(props.columnDef);
   return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
     "th",
     { style: props.columnDef.headerStyle, className: _this.className },
     props.children,
     " ",
-    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__SortButtonGroup__["a" /* default */], { sortClicked: _this.sortClicked })
+    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__SortButtonGroup__["a" /* default */], { sortClicked: _this.sortClicked })
   );
 };
 
@@ -501,7 +491,7 @@ Column.propTypes = {
 
 /***/ }),
 
-/***/ 180:
+/***/ 181:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -573,7 +563,7 @@ SortButton.props = {
 
 /***/ }),
 
-/***/ 181:
+/***/ 182:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -583,12 +573,22 @@ SortButton.props = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_prop_types___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_prop_types__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_reactstrap__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Columns__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__StyleBuilder__ = __webpack_require__(23);
 var _this = this;
 
 
 
 
 
+
+
+var cellClass = function cellClass(hideDown) {
+  if (hideDown) {
+    return "d-none d-" + hideDown + "-table-cell";
+  } else {
+    return "align-middle";
+  }
+};
 
 var TableCell = function TableCell(props) {
   _this.cellClicked = function (e) {
@@ -600,7 +600,7 @@ var TableCell = function TableCell(props) {
 
   return props.columnDef.clickable ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
     "td",
-    null,
+    { className: __WEBPACK_IMPORTED_MODULE_4__StyleBuilder__["a" /* default */].styleTableCell(props.columnDef) },
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
       "a",
       {
@@ -639,7 +639,7 @@ TableCell.propTypes = {
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(176);
+var content = __webpack_require__(177);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -647,7 +647,7 @@ var transform;
 var options = {"hmr":true}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(178)(content, options);
+var update = __webpack_require__(179)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -663,7 +663,26 @@ if(false) {
 	module.hot.dispose(function() { update(); });
 }
 
+/***/ }),
+
+/***/ 23:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _styleTableCell = function _styleTableCell(columnDef) {
+  return columnDef.hiddenBelow ? "d-none d-" + columnDef.hiddenBelow + "-table-cell" : "";
+};
+/* harmony default export */ __webpack_exports__["a"] = ({
+  styleTableHeader: function styleTableHeader(columnDef) {
+    return _styleTableCell(columnDef) + " align-middle";
+  },
+
+  styleTableCell: function styleTableCell(columnDef) {
+    return _styleTableCell(columnDef) + " align-middle";
+  }
+});
+
 /***/ })
 
-},[147]);
+},[148]);
 });
