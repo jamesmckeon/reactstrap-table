@@ -53,14 +53,11 @@ export default class ReactstrapTable extends React.Component {
     this.setState({ ColumnDefs: this.getColumnDefs(newProps.Data) });
   }
 
-  getSortComparer(fieldName) {
-    const data = this.state.SortedData;
-    //get value in first row for provided field
-    const val = data[0][fieldName];
-
+  getSortComparer(fieldName, val) {
     //https://stackoverflow.com/a/9716488/1342632
     const isNumber = !isNaN(parseFloat(val)) && isFinite(val);
 
+    //number check has to preceed date check, as JS will convert numbers to dates
     if (isNumber) {
       return (a, b) => {
         return parseFloat(a[fieldName]) - parseFloat(b[fieldName]);
@@ -73,7 +70,17 @@ export default class ReactstrapTable extends React.Component {
       };
     } else {
       return (a, b) => {
-        return a - b;
+        // tried "return a[fieldName] - b[fieldName];", but got random results
+        const valA = a[fieldName];
+        const valB = b[fieldName];
+
+        if (valA < valB) {
+          return -1;
+        } else if (valA > valB) {
+          return 1;
+        } else {
+          return 0;
+        }
       };
     }
   }
@@ -82,22 +89,14 @@ export default class ReactstrapTable extends React.Component {
     //get field
     const row = data[0];
     const key = Object.keys(row)[ordinal];
-
     const val = row[key];
 
-    var sortedData;
+    const comparer = this.getSortComparer(key, val);
 
-    let comparer = this.getSortComparer(key);
+    sortAscending ? data.sort(comparer) : data.reverse(comparer);
 
-    sortedData = sortAscending ? data.sort(comparer) : data.reverse(comparer);
-
-    console.log(
-      sortedData.map(d => {
-        return d[key];
-      })
-    );
     this.setState({
-      SortedData: sortedData
+      SortedData: data
     });
   }
 

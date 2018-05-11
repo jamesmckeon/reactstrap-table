@@ -114,36 +114,33 @@ var ReactstrapTable = function (_React$Component) {
     }
   }, {
     key: "getSortComparer",
-    value: function getSortComparer(fieldName) {
-      var data = this.state.SortedData;
-      //get value in first row for provided field
-      var val = data[0][fieldName];
-
+    value: function getSortComparer(fieldName, val) {
       //https://stackoverflow.com/a/9716488/1342632
       var isNumber = !isNaN(parseFloat(val)) && isFinite(val);
 
       if (isNumber) {
-        console.log("number");
         return function (a, b) {
           return parseFloat(a[fieldName]) - parseFloat(b[fieldName]);
         };
       } else if (new __WEBPACK_IMPORTED_MODULE_7_moment___default.a(val).isValid()) {
-        console.log("date");
         return function (a, b) {
           var momentA = new __WEBPACK_IMPORTED_MODULE_7_moment___default.a(a[fieldName]);
           var momentB = new __WEBPACK_IMPORTED_MODULE_7_moment___default.a(b[fieldName]);
           return momentA - momentB;
-          /* if (momentA.isBefore(momentB)) {
-            return -1;
-          } else if (momentB.isBefore(momentA)) {
-            return 1;
-          } else {
-            return 0;
-          } */
         };
       } else {
         return function (a, b) {
-          return a - b;
+          // tried "return a[fieldName] - b[fieldName];", but got random results
+          var valA = a[fieldName];
+          var valB = b[fieldName];
+
+          if (valA < valB) {
+            return -1;
+          } else if (valA > valB) {
+            return 1;
+          } else {
+            return 0;
+          }
         };
       }
     }
@@ -159,15 +156,16 @@ var ReactstrapTable = function (_React$Component) {
 
       var sortedData;
 
-      var comparer = this.getSortComparer(key);
+      var comparer = this.getSortComparer(key, val);
 
-      sortedData = sortAscending ? data.sort(comparer) : data.reverse(comparer);
+      sortAscending ? data.sort(comparer) : data.reverse(comparer);
+      //sortedData = sortAscending ? data.sort(comparer) : data.reverse(comparer);
 
-      console.log(sortedData.map(function (d) {
+      console.log(data.map(function (d) {
         return d[key];
       }));
       this.setState({
-        SortedData: sortedData
+        SortedData: data
       });
     }
   }, {
