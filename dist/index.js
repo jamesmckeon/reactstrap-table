@@ -81,6 +81,7 @@ var ReactstrapTable = function (_React$Component) {
     _this.pageChanged = _this.pageChanged.bind(_this);
     _this.sortClicked = _this.sortClicked.bind(_this);
     _this.getColumnDef = _this.getColumnDef.bind(_this);
+    _this.getSortComparer = _this.getSortComparer.bind(_this);
 
     _this.state = {
       HasData: _this.hasData(),
@@ -112,47 +113,48 @@ var ReactstrapTable = function (_React$Component) {
       this.setState({ ColumnDefs: this.getColumnDefs(newProps.Data) });
     }
   }, {
+    key: "getSortComparer",
+    value: function getSortComparer(fieldName) {
+      var data = this.state.SortedData;
+      //get value in first row for provided field
+      var val = data[0][fieldName];
+
+      var dateFormats = ["YYYY-MM-DD", "YYYY-MM-DD HH:mm", "YYYY-MM-DD HH:mm:ss"];
+
+      if (__WEBPACK_IMPORTED_MODULE_7_moment___default()(val, dateFormats, true).isValid()) {
+        console.log("date");
+        return function (a, b) {
+          return new __WEBPACK_IMPORTED_MODULE_7_moment___default.a(a[fieldName], dateFormats, true) - new __WEBPACK_IMPORTED_MODULE_7_moment___default.a(b[fieldName], dateFormats, true);
+        };
+      } else {
+        //https://stackoverflow.com/a/9716488/1342632
+        var isNumber = !isNaN(parseFloat(val)) && isFinite(val);
+
+        if (isNumber) {
+          console.log("number");
+          return function (a, b) {
+            return parseFloat(a[fieldName]) - parseFloat(b[fieldName]);
+          };
+        } else {
+          return function (a, b) {
+            return a - b;
+          };
+        }
+      }
+    }
+  }, {
     key: "sortClicked",
     value: function sortClicked(ordinal, sortAscending) {
       var data = this.state.SortedData;
       //get field
       var row = data[0];
       var key = Object.keys(row)[ordinal];
-      var val = row[key];
-      var isDate = __WEBPACK_IMPORTED_MODULE_7_moment___default()(val).isValid();
 
-      //https://stackoverflow.com/a/9716488/1342632
-      var isNumber = !isNaN(parseFloat(val)) && isFinite(val);
+      var val = row[key];
 
       var sortedData;
 
-      console.log(isDate);
-      console.log(isNumber);
-      var comparer = void 0;
-
-      if (isDate) {
-        sortedData = data.sort(function (a, b) {
-          return sortAscending ? new Date(a) - new Date(b) : new Date(b) - new Date(a);
-        });
-      } else if (isNumber) {
-        comparer = function comparer(a, b) {
-          return parseInt(a[key]) - parseInt(b[key]);
-        };
-      } else {
-        comparer = function compare(a, b) {
-          // Use toUpperCase() to ignore character casing
-          var valA = a[key].toUpperCase();
-          var valB = b[key].toUpperCase();
-
-          var comparison = 0;
-          if (valA > valB) {
-            comparison = 1;
-          } else if (valA < valB) {
-            comparison = -1;
-          }
-          return comparison;
-        };
-      }
+      var comparer = this.getSortComparer(key);
 
       sortedData = sortAscending ? data.sort(comparer) : data.reverse(comparer);
 

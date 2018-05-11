@@ -27,6 +27,7 @@ export default class ReactstrapTable extends React.Component {
     this.pageChanged = this.pageChanged.bind(this);
     this.sortClicked = this.sortClicked.bind(this);
     this.getColumnDef = this.getColumnDef.bind(this);
+    this.getSortComparer = this.getSortComparer.bind(this);
 
     this.state = {
       HasData: this.hasData(),
@@ -52,48 +53,52 @@ export default class ReactstrapTable extends React.Component {
     this.setState({ ColumnDefs: this.getColumnDefs(newProps.Data) });
   }
 
+  getSortComparer(fieldName) {
+    const data = this.state.SortedData;
+    //get value in first row for provided field
+    const val = data[0][fieldName];
+
+    const dateFormats = [
+      "YYYY-MM-DD",
+      "YYYY-MM-DD HH:mm",
+      "YYYY-MM-DD HH:mm:ss"
+    ];
+
+    if (moment(val, dateFormats, true).isValid()) {
+      console.log("date");
+      return (a, b) => {
+        return (
+          new moment(a[fieldName], dateFormats, true) -
+          new moment(b[fieldName], dateFormats, true)
+        );
+      };
+    } else {
+      //https://stackoverflow.com/a/9716488/1342632
+      const isNumber = !isNaN(parseFloat(val)) && isFinite(val);
+
+      if (isNumber) {
+        console.log("number");
+        return (a, b) => {
+          return parseFloat(a[fieldName]) - parseFloat(b[fieldName]);
+        };
+      } else {
+        return (a, b) => {
+          return a - b;
+        };
+      }
+    }
+  }
   sortClicked(ordinal, sortAscending) {
     const data = this.state.SortedData;
     //get field
     const row = data[0];
     const key = Object.keys(row)[ordinal];
-    const val = row[key];
-    const isDate = moment(val).isValid();
 
-    //https://stackoverflow.com/a/9716488/1342632
-    const isNumber = !isNaN(parseFloat(val)) && isFinite(val);
+    const val = row[key];
 
     var sortedData;
 
-    console.log(isDate);
-    console.log(isNumber);
-    let comparer;
-
-    if (isDate) {
-      sortedData = data.sort(function(a, b) {
-        return sortAscending
-          ? new Date(a) - new Date(b)
-          : new Date(b) - new Date(a);
-      });
-    } else if (isNumber) {
-      comparer = (a, b) => {
-        return parseInt(a[key]) - parseInt(b[key]);
-      };
-    } else {
-      comparer = function compare(a, b) {
-        // Use toUpperCase() to ignore character casing
-        const valA = a[key].toUpperCase();
-        const valB = b[key].toUpperCase();
-
-        let comparison = 0;
-        if (valA > valB) {
-          comparison = 1;
-        } else if (valA < valB) {
-          comparison = -1;
-        }
-        return comparison;
-      };
-    }
+    let comparer = this.getSortComparer(key);
 
     sortedData = sortAscending ? data.sort(comparer) : data.reverse(comparer);
 
