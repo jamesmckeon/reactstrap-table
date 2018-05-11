@@ -119,27 +119,32 @@ var ReactstrapTable = function (_React$Component) {
       //get value in first row for provided field
       var val = data[0][fieldName];
 
-      var dateFormats = ["YYYY-MM-DD", "YYYY-MM-DD HH:mm", "YYYY-MM-DD HH:mm:ss"];
+      //https://stackoverflow.com/a/9716488/1342632
+      var isNumber = !isNaN(parseFloat(val)) && isFinite(val);
 
-      if (__WEBPACK_IMPORTED_MODULE_7_moment___default()(val, dateFormats, true).isValid()) {
+      if (isNumber) {
+        console.log("number");
+        return function (a, b) {
+          return parseFloat(a[fieldName]) - parseFloat(b[fieldName]);
+        };
+      } else if (new __WEBPACK_IMPORTED_MODULE_7_moment___default.a(val).isValid()) {
         console.log("date");
         return function (a, b) {
-          return new __WEBPACK_IMPORTED_MODULE_7_moment___default.a(a[fieldName], dateFormats, true) - new __WEBPACK_IMPORTED_MODULE_7_moment___default.a(b[fieldName], dateFormats, true);
+          var momentA = new __WEBPACK_IMPORTED_MODULE_7_moment___default.a(a[fieldName]);
+          var momentB = new __WEBPACK_IMPORTED_MODULE_7_moment___default.a(b[fieldName]);
+          return momentA - momentB;
+          /* if (momentA.isBefore(momentB)) {
+            return -1;
+          } else if (momentB.isBefore(momentA)) {
+            return 1;
+          } else {
+            return 0;
+          } */
         };
       } else {
-        //https://stackoverflow.com/a/9716488/1342632
-        var isNumber = !isNaN(parseFloat(val)) && isFinite(val);
-
-        if (isNumber) {
-          console.log("number");
-          return function (a, b) {
-            return parseFloat(a[fieldName]) - parseFloat(b[fieldName]);
-          };
-        } else {
-          return function (a, b) {
-            return a - b;
-          };
-        }
+        return function (a, b) {
+          return a - b;
+        };
       }
     }
   }, {

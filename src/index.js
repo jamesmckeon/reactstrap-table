@@ -58,34 +58,23 @@ export default class ReactstrapTable extends React.Component {
     //get value in first row for provided field
     const val = data[0][fieldName];
 
-    const dateFormats = [
-      "YYYY-MM-DD",
-      "YYYY-MM-DD HH:mm",
-      "YYYY-MM-DD HH:mm:ss"
-    ];
+    //https://stackoverflow.com/a/9716488/1342632
+    const isNumber = !isNaN(parseFloat(val)) && isFinite(val);
 
-    if (moment(val, dateFormats, true).isValid()) {
-      console.log("date");
+    if (isNumber) {
       return (a, b) => {
-        return (
-          new moment(a[fieldName], dateFormats, true) -
-          new moment(b[fieldName], dateFormats, true)
-        );
+        return parseFloat(a[fieldName]) - parseFloat(b[fieldName]);
+      };
+    } else if (new moment(val).isValid()) {
+      return (a, b) => {
+        const momentA = new moment(a[fieldName]);
+        const momentB = new moment(b[fieldName]);
+        return momentA - momentB;
       };
     } else {
-      //https://stackoverflow.com/a/9716488/1342632
-      const isNumber = !isNaN(parseFloat(val)) && isFinite(val);
-
-      if (isNumber) {
-        console.log("number");
-        return (a, b) => {
-          return parseFloat(a[fieldName]) - parseFloat(b[fieldName]);
-        };
-      } else {
-        return (a, b) => {
-          return a - b;
-        };
-      }
+      return (a, b) => {
+        return a - b;
+      };
     }
   }
   sortClicked(ordinal, sortAscending) {
