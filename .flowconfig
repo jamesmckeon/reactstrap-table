@@ -1,0 +1,12 @@
+[ignore]
+.*/dist/.*
+
+[include]
+
+[libs]
+node_modules/flow-inlinestyle/index.js
+[lints]
+
+[options]
+
+[strict]

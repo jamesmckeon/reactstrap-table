@@ -1,44 +1,42 @@
-import React from "react";
+// @flow
+
+import * as React from "react";
 import ReactDOM from "react-dom";
-import PropTypes from "prop-types";
+
 import SortButton from "./SortButton";
 import StyleBuilder from "./StyleBuilder";
 import SortButtonGroup from "./SortButtonGroup";
-import {
-  shape,
-  number,
-  string,
-  oneOf,
-  bool,
-  object,
-  isRequired
-} from "prop-types";
 
-export const ColumnDefType = shape({
-  fieldName: string.isRequired,
-  headerText: string,
-  sortable: bool,
-  headerStyle: object,
-  clickable: bool,
-  //column will be hidden on breakpoints lower than this
-  hiddenBelow: oneOf(["sm", "md", "lg", "xl"]),
-  tooltipText: string
-});
+export type BreakPoints = "sm" | "md" | "lg" | "xl";
 
-export function ColumnDef(fieldName, headerText, sortable, headerStyle) {
-  if (!fieldName) {
-    throw new Error("fieldName is required");
+export class ColumnDef {
+  constructor(
+    fieldName: string,
+    headerText: ?string,
+    sortable: ?boolean,
+    headerStyle: ?string,
+    tooltipText: ?string,
+    hiddenBelow: ?BreakPoints
+  ) {
+    this.FieldName = fieldName;
+    this.HeaderText = headerText;
+    this.Sortable = sortable || false;
   }
-  this.sortable = sortable || false;
-  this.headerText = headerText || "";
-  this.headerStyle = headerStyle || {};
-  this.fieldName = fieldName;
+  FieldName: string;
+  HeaderText: ?string;
+  Sortable: boolean;
+  HeaderStyle: ?InlineStyle;
 }
 
-export const Column = props => {
-  this.className = StyleBuilder.styleTableHeader(props.columnDef);
+export type ColumnProps = {
+  columnDef: ColumnDef,
+  children?: React.Node
+};
+
+export const Column = (props: ColumnProps) => {
+  const className = StyleBuilder.styleTableHeader(props.columnDef);
   return (
-    <th style={props.columnDef.headerStyle} className={this.className}>
+    <th style={props.columnDef.HeaderStyle || {}} className={className}>
       {props.children}
     </th>
   );
