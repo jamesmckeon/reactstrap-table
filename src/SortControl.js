@@ -1,5 +1,7 @@
+// @flow
+
 import React from "react";
-import PropTypes from "prop-types";
+
 import { ButtonGroup, Button, ButtonToolbar } from "reactstrap";
 import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 import UpIcon from "@fortawesome/fontawesome-free-solid/faAngleUp";
@@ -8,12 +10,17 @@ import "./index.css";
 
 const iconSize = "shrink-3";
 
-const SortButton = props => {
-  this.upClicked = () => {
-    props.sortClicked(true);
+export type SortClicked = (ascending: boolean) => void;
+export type SortControlProps = {
+  onClick: SortClicked
+};
+
+const SortControl = (props: SortControlProps) => {
+  const upClicked = () => {
+    props.onClick(true);
   };
-  this.downClicked = () => {
-    props.sortClicked(false);
+  const downClicked = () => {
+    props.onClick(false);
   };
   return (
     <ButtonGroup
@@ -22,14 +29,14 @@ const SortButton = props => {
       style={{ marginLeft: ".5em" }}
       className="float-right"
     >
-      <Button outline onClick={this.upClicked}>
+      <Button outline onClick={upClicked}>
         <FontAwesomeIcon
           icon={UpIcon}
           transform={iconSize}
           //className="sort-icon"
         />
       </Button>
-      <Button outline onClick={this.downClicked}>
+      <Button outline onClick={downClicked}>
         <FontAwesomeIcon
           icon={DownIcon}
           transform={iconSize}
@@ -40,8 +47,4 @@ const SortButton = props => {
   );
 };
 
-SortButton.props = {
-  sortClicked: PropTypes.func.isRequired
-};
-
-export default SortButton;
+export default SortControl;

@@ -1,74 +1,108 @@
-import React from "react";
+// @flow
+
+import * as React from "react";
 import PropTypes from "prop-types";
 import Pager from "reactstrap-pager";
 import { Table } from "reactstrap";
-import { Column, SortableColumn, ColumnDef, ColumnDefType } from "./Columns";
+import { Column, SortableColumn, ColumnDef } from "./Columns";
 import TableCell from "./TableCell";
 import moment from "moment";
 
-const CenteredText = props => {
+const CenteredText = (props: { children: React.Node }) => {
   return (
     <div className="text-center font-italic">
-      <hr /> <h5>{props.text}</h5>
+      <hr /> <h5>{props.children}</h5>
       <hr />
     </div>
   );
 };
 
-export default class ReactstrapTable extends React.Component {
-  constructor(props, context) {
-    super(props, context);
+export type TableProps = {
+  pagesDisplayed: number,
+  columnDefs: Array<ColumnDef>,
+  cellClicked: CellClicked,
+  data: Array<Object>,
+  hidden: boolean,
+  tag: string | number,
+  bordered?: boolean,
+  borderless?: boolean,
+  striped?: boolean,
+  dark?: boolean,
+  hover?: boolean,
+  responsive?: boolean,
+  Data: Array<Object>
+};
 
-    this.getBody = this.getBody.bind(this);
-    this.getHeaders = this.getHeaders.bind(this);
-    this.hasData = this.hasData.bind(this);
-    this.totalPages = this.totalPages.bind(this);
-    this.pageChanged = this.pageChanged.bind(this);
-    this.sortClicked = this.sortClicked.bind(this);
-    this.getColumnDef = this.getColumnDef.bind(this);
-    this.getSortComparer = this.getSortComparer.bind(this);
-
-    this.state = {
-      HasData: this.hasData(),
-      TotalPages: this.totalPages(),
-      CurrentPage: 1,
-      SortedData: this.props.data,
-      ColumnDefs: this.getColumnDefs(this.props.data)
-    };
+class TableState {
+  constructor(
+    hasData: boolean = false,
+    totalPages: number = 0,
+    currentPage: number = 0,
+    sortedData?: Array<Object>,
+    columnDefs?: Array<ColumnDef>
+  ) {
+    this.TotalPages = totalPages;
+    this.HasData = hasData;
+    this.CurrentPage = currentPage;
+    this.SortedData = sortedData;
+    this.ColumnDefs = columnDefs;
   }
+  TotalPages: number;
+  HasData: boolean;
+  CurrentPage: number;
 
-  totalPages() {
+  SortedData: ?Array<Object>;
+  ColumnDefs: ?Array<ColumnDef>;
+}
+
+export type CellClicked = (fieldName: string, ascending: boolean) => void;
+
+export default class ReactstrapTable extends React.Component<
+  TableProps,
+  TableState
+> {
+  state = new TableState();
+
+  /*   {
+    HasData: this.hasData(),
+    TotalPages: this.totalPages(),
+    CurrentPage: 1,
+    SortedData: this.props.data,
+    ColumnDefs: this.getColumnDefs(this.props.data)
+  }; */
+
+  totalPages = () => {
     if (this.props.data) {
       return this.props.data.length / this.props.pagesDisplayed;
     } else {
       return 0;
     }
-  }
-  pageChanged(pageNum) {
+  };
+  pageChanged = (pageNum: number) => {
     this.setState({ CurrentPage: pageNum });
-  }
+  };
 
-  componentWillReceiveProps(newProps) {
+  componentWillReceiveProps = (newProps: TableProps) => {
     this.setState({ ColumnDefs: this.getColumnDefs(newProps.Data) });
-  }
+  };
 
-  getSortComparer(fieldName, val) {
+  getSortComparer = (fieldName: string, val: string) => {
     //https://stackoverflow.com/a/9716488/1342632
     const isNumber = !isNaN(parseFloat(val)) && isFinite(val);
 
     //number check has to preceed date check, as JS will convert numbers to dates
     if (isNumber) {
-      return (a, b) => {
+      return (a: Object, b: Object) => {
         return parseFloat(a[fieldName]) - parseFloat(b[fieldName]);
       };
     } else if (new moment(val).isValid()) {
-      return (a, b) => {
+      return (a: Object, b: Object) => {
         const momentA = new moment(a[fieldName]);
         const momentB = new moment(b[fieldName]);
         return momentA - momentB;
       };
     } else {
-      return (a, b) => {
+      return (a: Object, b: Object) => {
         // tried "return a[fieldName] - b[fieldName];", but got random results
         const valA = a[fieldName];
         const valB = b[fieldName];
@@ -82,8 +116,9 @@ export default class ReactstrapTable extends React.Component {
         }
       };
     }
-  }
-  sortClicked(ordinal, sortAscending) {
+  };
+
+  sortClicked = (ordinal: number, sortAscending: boolean) => {
     const data = this.state.SortedData;
     //get field
     const row = data[0];
@@ -97,7 +132,7 @@ export default class ReactstrapTable extends React.Component {
     this.setState({
       SortedData: data
     });
-  }
+  };
 
   getColumnDef(fieldName) {
     return this.state.ColumnDefs.find(def => {
@@ -214,7 +249,7 @@ export default class ReactstrapTable extends React.Component {
         />
       </div>
     ) : (
-      <CenteredText text={"No records"} />
+      <CenteredText>No records</CenteredText>
     );
   }
 }
