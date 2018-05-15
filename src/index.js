@@ -7,6 +7,7 @@ import { Table } from "reactstrap";
 import { Column, SortableColumn, ColumnDef } from "./Columns";
 import TableCell from "./TableCell";
 import moment from "moment";
+import { Sorter } from "./Sorter";
 
 const CenteredText = (props: { children: React.Node }) => {
   return (
@@ -86,55 +87,17 @@ export default class ReactstrapTable extends React.Component<
     this.setState({ ColumnDefs: this.getColumnDefs(newProps.Data) });
   };
 
-  getSortComparer = (fieldName: string, val: string) => {
-    //https://stackoverflow.com/a/9716488/1342632
-    const isNumber = !isNaN(parseFloat(val)) && isFinite(val);
-
-    //number check has to preceed date check, as JS will convert numbers to dates
-    if (isNumber) {
-      return (a: Object, b: Object) => {
-        return parseFloat(a[fieldName]) - parseFloat(b[fieldName]);
-      };
-    } else if (new moment(val).isValid()) {
-      return (a: Object, b: Object) => {
-        const momentA = new moment(a[fieldName]);
-        const momentB = new moment(b[fieldName]);
-        return momentA - momentB;
-      };
-    } else {
-      return (a: Object, b: Object) => {
-        // tried "return a[fieldName] - b[fieldName];", but got random results
-        const valA = a[fieldName];
-        const valB = b[fieldName];
-
-        if (valA < valB) {
-          return -1;
-        } else if (valA > valB) {
-          return 1;
-        } else {
-          return 0;
-        }
-      };
-    }
-  };
-
   sortClicked = (ordinal: number, sortAscending: boolean) => {
     const data = this.state.SortedData;
-    //get field
     const row = data[0];
-    const key = Object.keys(row)[ordinal];
-    const val = row[key];
-
-    const comparer = this.getSortComparer(key, val);
-
-    sortAscending ? data.sort(comparer) : data.reverse(comparer);
-
+    const fieldName = Object.keys(row)[ordinal];
+    const sortedData = Sorter.Sort(data, fieldName, sortAscending);
     this.setState({
-      SortedData: data
+      SortedData: sortedData
     });
   };
 
-  getColumnDef(fieldName) {
+  getColumnDef(fieldName: string) {
     return this.state.ColumnDefs.find(def => {
       return def.fieldName === fieldName;
     });
