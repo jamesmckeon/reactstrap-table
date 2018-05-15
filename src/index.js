@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import Pager from "reactstrap-pager";
 import { Table } from "reactstrap";
 import { Column, SortableColumn, ColumnDef } from "./Columns";
-import TableCell from "./TableCell";
+import { TableCell, type CellClicked } from "./TableCell";
 import moment from "moment";
 import { Sorter } from "./Sorter";
 
@@ -31,7 +31,8 @@ export type TableProps = {
   dark?: boolean,
   hover?: boolean,
   responsive?: boolean,
-  Data: Array<Object>
+  Data: Array<Object>,
+  size: string
 };
 
 class TableState {
@@ -39,8 +40,8 @@ class TableState {
     hasData: boolean = false,
     totalPages: number = 0,
     currentPage: number = 0,
-    sortedData?: Array<Object>,
-    columnDefs?: Array<ColumnDef>
+    sortedData: Array<Object>,
+    columnDefs: Array<ColumnDef>
   ) {
     this.TotalPages = totalPages;
     this.HasData = hasData;
@@ -56,13 +57,17 @@ class TableState {
   ColumnDefs: ?Array<ColumnDef>;
 }
 
-export type CellClicked = (fieldName: string, ascending: boolean) => void;
-
 export default class ReactstrapTable extends React.Component<
   TableProps,
   TableState
 > {
-  state = new TableState();
+  state = new TableState(
+    this.hasData(),
+    this.totalPages(),
+    1,
+    this.props.data,
+    this.getColumnDefs(this.props.data)
+  );
 
   /*   {
     HasData: this.hasData(),
@@ -88,6 +93,9 @@ export default class ReactstrapTable extends React.Component<
   };
 
   sortClicked = (ordinal: number, sortAscending: boolean) => {
+    if (!this.state.SortedData) {
+      throw new Error("no data to sort");
+    }
     const data = this.state.SortedData;
     const row = data[0];
     const fieldName = Object.keys(row)[ordinal];
@@ -98,40 +106,50 @@ export default class ReactstrapTable extends React.Component<
   };
 
   getColumnDef(fieldName: string) {
+    if (!this.state.ColumnDefs) {
+      throw new Error("ColumnDefs are missing");
+    }
     return this.state.ColumnDefs.find(def => {
-      return def.fieldName === fieldName;
+      return def.FieldName === fieldName;
     });
   }
   //builds column defs
-  getColumnDefs(data) {
+  getColumnDefs(data: Array<Object>) {
     if (!data || data.length === 0) {
       return [];
     }
     //no columndefs provided, use first row in data
     const row = data[0];
 
-    return Object.keys(row).map((r, i) => {
-      //find columnDef based on field name
-      const def =
-        this.props.columnDefs &&
-        this.props.columnDefs.find(d => {
-          return d.fieldName === r;
-        });
+    return (
+      Object.keys(row).map <
+      Object >
+      ((r, i): ColumnDef => {
+        //find columnDef based on field name
+        const def =
+          this.props.columnDefs &&
+          this.props.columnDefs.find(d => {
+            return d.FieldName === r;
+          });
 
-      //if a column def has been provided for this ordinal, use it
-      if (def) {
-        return def;
-      } else {
-        return new ColumnDef(r, r);
-      }
-    });
+        //if a column def has been provided for this ordinal, use it
+        if (def) {
+          return def;
+        } else {
+          return new ColumnDef(r, r);
+        }
+      })
+    );
   }
 
   getHeaders() {
+    if (!this.state.ColumnDefs) {
+      throw new Error("ColumnDefs are missing");
+    }
     return (
       <tr>
         {this.state.ColumnDefs.map((c, i) => {
-          if (c.sortable) {
+          if (c.Sortable) {
             return (
               <SortableColumn
                 key={i}
@@ -139,13 +157,13 @@ export default class ReactstrapTable extends React.Component<
                 columnDef={c}
                 sortClicked={this.sortClicked}
               >
-                {c.headerText}
+                {c.HeaderText}
               </SortableColumn>
             );
           } else {
             return (
               <Column key={i} ordinal={i} columnDef={c}>
-                {c.headerText}
+                {c.HeaderText}
               </Column>
             );
           }
@@ -155,7 +173,7 @@ export default class ReactstrapTable extends React.Component<
   }
 
   getBody() {
-    if (!this.state.HasData) {
+    if (!this.state.SortedData) {
       return [];
     }
     const start = (this.state.CurrentPage - 1) * this.props.pagesDisplayed;
@@ -166,6 +184,9 @@ export default class ReactstrapTable extends React.Component<
           {Object.keys(row).map((key, j) => {
             const def = this.getColumnDef(key);
 
+            if (!def) {
+              throw new Error("missing columnDef");
+            }
             return (
               <TableCell
                 id={`r${i}c${j}`}
@@ -182,9 +203,9 @@ export default class ReactstrapTable extends React.Component<
     });
   }
 
-  hasData() {
+  hasData = () => {
     return this.props.data ? this.props.data.length > 0 : false;
-  }
+  };
 
   render() {
     if (this.props.hidden) {
@@ -216,26 +237,3 @@ export default class ReactstrapTable extends React.Component<
     );
   }
 }
-
-ReactstrapTable.propTypes = {
-  hidden: PropTypes.bool,
-  pagesDisplayed: PropTypes.number,
-  columnDefs: PropTypes.arrayOf(ColumnDefType),
-  cellClicked: PropTypes.func,
-  tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-  size: PropTypes.string,
-  bordered: PropTypes.bool,
-  borderless: PropTypes.bool,
-  striped: PropTypes.bool,
-  dark: PropTypes.bool,
-  hover: PropTypes.bool,
-  responsive: PropTypes.bool,
-  columnDefs: PropTypes.arrayOf(ColumnDefType),
-  //valid JSON
-  data: PropTypes.array,
-  cellClicked: PropTypes.func
-};
-
-ReactstrapTable.defaultProps = {
-  pagesDisplayed: 5
-};

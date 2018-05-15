@@ -17,18 +17,26 @@ export class ColumnDef {
     fieldName: string,
     headerText: ?string,
     sortable: ?boolean,
-    headerStyle: ?string,
+    headerStyle: ?InlineStyle,
     tooltipText: ?string,
-    hiddenBelow: ?BreakPoints
+    hiddenBelow: ?BreakPoints,
+    clickable: ?boolean
   ) {
     this.FieldName = fieldName;
     this.HeaderText = headerText;
     this.Sortable = sortable || false;
+    this.HeaderStyle = headerStyle || null;
+    this.HiddenBelow = hiddenBelow || null;
+    this.TooltipText = tooltipText || null;
+    this.Clickable = clickable || false;
   }
   FieldName: string;
   HeaderText: ?string;
   Sortable: boolean;
   HeaderStyle: ?InlineStyle;
+  HiddenBelow: ?BreakPoints;
+  TooltipText: ?string;
+  Clickable: boolean;
 }
 
 export type ColumnProps = {
@@ -38,7 +46,7 @@ export type ColumnProps = {
 };
 
 export const Column = (props: ColumnProps) => {
-  const className = StyleBuilder.styleTableHeader(props.columnDef);
+  const className = StyleBuilder.StyleTableHeader(props.columnDef);
   return (
     <th style={props.columnDef.HeaderStyle || {}} className={className}>
       {props.children}
@@ -55,7 +63,7 @@ export const SortableColumn = (props: SortableColumnProps) => {
     props.sortClicked(props.ordinal, ascending);
   };
 
-  const className = StyleBuilder.styleTableHeader(props.columnDef);
+  const className = StyleBuilder.StyleTableHeader(props.columnDef);
   return (
     <th style={props.columnDef.HeaderStyle || {}} className={className}>
       {props.children} <SortControl onClick={sortClicked} />

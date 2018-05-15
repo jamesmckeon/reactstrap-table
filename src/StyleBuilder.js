@@ -1,14 +1,14 @@
-const styleTableCell = columnDef => {
-  return columnDef.hiddenBelow
-    ? `d-none d-${columnDef.hiddenBelow}-table-cell`
-    : "";
-};
-export default {
-  styleTableHeader: function(columnDef) {
-    return styleTableCell(columnDef) + " align-middle";
-  },
+// @flow
+import { ColumnDef } from "./Columns";
 
-  styleTableCell: function(columnDef) {
-    return styleTableCell(columnDef);
-  }
-};
+export default class StyleBuilder {
+  static StyleTableCell = (columnDef: ColumnDef) => {
+    return columnDef.HiddenBelow
+      ? `d-none d-${columnDef.HiddenBelow}-table-cell`
+      : "";
+  };
+
+  static StyleTableHeader = (columnDef: ColumnDef) => {
+    return this.StyleTableCell(columnDef) + " align-middle";
+  };
+}
