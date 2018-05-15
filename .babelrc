@@ -1,4 +1,8 @@
 {
-    "presets": ["es2015", "react", "flow"]
-
+    "plugins": ["transform-class-properties"],
+    "presets": [
+        ["es2015", {
+            "modules": "umd"
+        }], "react", "flow"
+    ]
 }

@@ -35,7 +35,14 @@ export type TableProps = {
   size: string
 };
 
-class TableState {
+type TableState = {
+  TotalPages: number,
+  HasData: boolean,
+  CurrentPage: number,
+  SortedData: Array<Object>,
+  ColumnDefs: Array<ColumnDef>
+};
+/* class TableState {
   constructor(
     hasData: boolean = false,
     totalPages: number = 0,
@@ -55,19 +62,19 @@ class TableState {
 
   SortedData: ?Array<Object>;
   ColumnDefs: ?Array<ColumnDef>;
-}
+} */
 
 export default class ReactstrapTable extends React.Component<
   TableProps,
   TableState
 > {
-  state = new TableState(
-    this.hasData(),
-    this.totalPages(),
-    1,
-    this.props.data,
-    this.getColumnDefs(this.props.data)
-  );
+  state = {
+    HasData: this.hasData(),
+    TotalPages: this.totalPages(),
+    CurrentPage: 1,
+    SortedData: this.props.data,
+    ColumnDefs: this.getColumnDefs(this.props.data)
+  };
 
   /*   {
     HasData: this.hasData(),
