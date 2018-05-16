@@ -6,5 +6,5 @@ export default class StyleBuilder {
     columnDef.HiddenBelow ? `d-none d-${columnDef.HiddenBelow}-table-cell` : "";
 
   static StyleTableHeader = (columnDef: ColumnDef) =>
-    `${this.StyleTableCell(columnDef)} align-middle`;
+    `${StyleBuilder.StyleTableCell(columnDef)} align-middle`;
 }

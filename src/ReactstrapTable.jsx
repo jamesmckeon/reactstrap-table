@@ -31,13 +31,46 @@ export type TableProps = {
   size: string
 };
 
-type TableState = {
-  TotalPages: number,
-  HasData: boolean,
-  CurrentPage: number,
-  SortedData: Array<Object>,
-  ColumnDefs: Array<ColumnDef>
-};
+class TableState {
+  constructor(props: TableProps) {
+    this.HasData = props && props.data && props.data.length > 0;
+    this.TotalPages = this.HasData
+      ? props.data.length / props.pagesDisplayed
+      : 0;
+    this.CurrentPage = this.HasData ? 1 : 0;
+    this.SortedData = this.HasData ? props.data : [];
+    this.ColumnDefs = TableState.getColumnDefs(props);
+  }
+
+  TotalPages: number;
+  HasData: boolean;
+  CurrentPage: number;
+  SortedData: Array<Object>;
+  ColumnDefs: Array<ColumnDef>;
+
+  // builds column defs
+  static getColumnDefs(props: TableProps): Array<ColumnDef> {
+    if (!props || !props.data || props.data.length === 0) {
+      return [];
+    }
+    // no columndefs provided, use first row in data
+    const row = props.data[0];
+
+    return Object.keys(row).map((fieldName: string) => {
+      // find columnDef based on field name
+      const def =
+        props.columnDefs &&
+        props.columnDefs.find(d => d.FieldName === fieldName);
+
+      // if a column def has been provided for this ordinal, use it
+      if (def) {
+        return def;
+      }
+      // otherwise, use fieldname for header text
+      return new ColumnDef(fieldName, fieldName);
+    });
+  }
+}
 
 type UniqueRow = {
   Id: number
@@ -53,55 +86,16 @@ export default class ReactstrapTable extends React.Component<
     striped: false,
     dark: false,
     hover: false,
-    responsive: false
+    responsive: false,
+    pagesDisplayed: 5
   };
 
-  // if dataset doesn't have an id property, add one for React element key mapping
-
-  state = {
-    HasData: this.hasData(),
-    TotalPages: this.totalPages(),
-    CurrentPage: 1,
-    SortedData: this.formatData(this.props.data),
-    ColumnDefs: this.getColumnDefs(this.props.data)
-  };
+  state = new TableState(this.props);
 
   componentWillReceiveProps = (newProps: TableProps) => {
-    this.setState({ ColumnDefs: this.getColumnDefs(newProps.Data) });
+    const newState = new TableState(newProps);
+    this.setState(newState);
   };
-
-  getColumnDef(fieldName: string) {
-    if (!this.state.ColumnDefs) {
-      throw new Error("ColumnDefs are missing");
-    }
-    return this.state.ColumnDefs.find(def => def.FieldName === fieldName);
-  }
-  // builds column defs
-  getColumnDefs(data: Array<Object>) {
-    if (!data || data.length === 0) {
-      return [];
-    }
-    // no columndefs provided, use first row in data
-    const row = data[0];
-
-    return (
-      Object.keys(row).map <
-      Object >
-      (fieldName => {
-        // find columnDef based on field name
-        const def =
-          this.props.columnDefs &&
-          this.props.columnDefs.find(d => d.FieldName === fieldName);
-
-        // if a column def has been provided for this ordinal, use it
-        if (def) {
-          return def;
-        }
-        // otherwise, use fieldname for header text
-        return new ColumnDef(fieldName, fieldName);
-      })
-    );
-  }
 
   getHeaders() {
     if (!this.state.ColumnDefs) {
@@ -132,36 +126,48 @@ export default class ReactstrapTable extends React.Component<
     );
   }
 
+  getColumnDef(fieldName: string) {
+    if (!this.state.ColumnDefs) {
+      throw new Error("ColumnDefs are missing");
+    }
+    return this.state.ColumnDefs.find(def => def.FieldName === fieldName);
+  }
+
+  getRowCells(row: UniqueRow) {
+    let colId = 1;
+    return Object.keys(row).map(fieldName => {
+      const def = this.getColumnDef(fieldName);
+
+      if (!def) {
+        throw new Error("missing columnDef");
+      }
+      colId += 1;
+      return (
+        <TableCell
+          id={`r${row.Id}c${colId}`}
+          key={colId}
+          onClick={this.props.cellClicked}
+          columnDef={def}
+        >
+          {row[fieldName].toString()}
+        </TableCell>
+      );
+    });
+  }
   getBody() {
-    if (!this.state.SortedData) {
+    if (!this.state.HasData) {
       return [];
     }
     const start = (this.state.CurrentPage - 1) * this.props.pagesDisplayed;
     const end = start + this.props.pagesDisplayed;
-    let colId = 0;
-    return this.state.SortedData.slice(start, end).map((row: UniqueRow) => (
-      <tr key={row.Id}>
-        {Object.keys(row).map(key => {
-          const def = this.getColumnDef(key);
 
-          if (!def) {
-            throw new Error("missing columnDef");
-          }
-          colId += 1;
-          return (
-            <TableCell
-              id={`r${row.Id}c${colId}`}
-              key={colId}
-              onClick={this.props.cellClicked}
-              columnDef={def}
-            >
-              {row[key].toString()}
-            </TableCell>
-          );
-        })}
-      </tr>
-    ));
+    const body = this.state.SortedData.slice(start, end).map(
+      (row: UniqueRow) => <tr key={row.Id}>{this.getRowCells(row)}</tr>
+    );
+    console.log(body);
+    return body;
   }
+
   /**
    *
    *Adds Id field to data
@@ -198,13 +204,6 @@ export default class ReactstrapTable extends React.Component<
   pageChanged = (pageNum: number) => {
     this.setState({ CurrentPage: pageNum });
   };
-  totalPages = () => {
-    if (this.props.data) {
-      return this.props.data.length / this.props.pagesDisplayed;
-    }
-    return 0;
-  };
-  hasData = () => (this.props.data ? this.props.data.length > 0 : false);
 
   render() {
     if (this.props.hidden) {
