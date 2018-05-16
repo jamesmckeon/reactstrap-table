@@ -4,5 +4,6 @@
         ["es2015", {
             "modules": "umd"
         }], "react", "flow"
-    ]
+    ],
+    "retainLines": true
 }

@@ -16,9 +16,11 @@
         "test": "jest",
         "coverage": "jest --coverage",
         "deploy": "",
-        "lint": "eslint ./src",
+        "lint": "eslint ./src ./tests",
         "start": "",
-        "flow": "flow"
+        "flow": "flow",
+        "flow status": "flow status",
+        "flow start": "flow start"
     },
     "dependencies": {
         "@fortawesome/fontawesome": "^1.1.8",
@@ -44,10 +46,18 @@
         "enzyme": "^3.3.0",
         "enzyme-adapter-react-16": "^1.1.1",
         "eslint": "^4.9.0",
-        "eslint-plugin-react": "^7.4.0",
+        "eslint-config-airbnb": "^16.1.0",
+        "eslint-config-prettier": "^2.9.0",
+        "eslint-plugin-flowtype": "^2.46.3",
+        "eslint-plugin-flowtype-errors": "^3.5.1",
+        "eslint-plugin-import": "^2.11.0",
+        "eslint-plugin-jsx-a11y": "^6.0.3",
+        "eslint-plugin-prettier": "^2.6.0",
+        "eslint-plugin-react": "^7.8.2",
         "flow-bin": "^0.72.0",
         "flow-inlinestyle": "^1.0.9",
         "jest": "^21.2.1",
+        "prettier-eslint": "^8.8.1",
         "react-hot-loader": "next",
         "sinon": "^5.0.7",
         "style-loader": "^0.19.0",
@@ -58,7 +68,9 @@
         "modulePaths": [
             "./src"
         ],
-        "testMatch": ["**/tests/*.tests.js"],
+        "testMatch": [
+            "**/tests/*.tests.js"
+        ],
         "moduleFileExtensions": [
             "js",
             "jsx"
