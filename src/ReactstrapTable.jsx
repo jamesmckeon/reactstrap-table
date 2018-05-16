@@ -6,6 +6,7 @@ import Pager from "reactstrap-pager";
 import { Table } from "reactstrap";
 import Column, { SortableColumn, ColumnDef } from "Columns";
 import TableCell, { type CellClicked } from "TableCell";
+import PagingOptions from "PagingOptions";
 
 const CenteredText = (props: { children: React.Node }) => (
   <div className="text-center font-italic">
@@ -14,12 +15,50 @@ const CenteredText = (props: { children: React.Node }) => (
   </div>
 );
 
+export class SortOptions {
+  constructor(fieldName: string, ascending: boolean) {
+    this.FieldName = fieldName;
+    this.Ascending = ascending;
+  }
+
+  FieldName: string;
+  Ascending: boolean;
+}
+
 export type TableProps = {
-  pagesDisplayed: number,
+  /**
+   *
+   *
+   * @type {?PagingOptions}
+   */
+  pagingOptions: ?PagingOptions,
+  /**
+   * Specified the default sort field for a table
+   *
+   * @type {?SortOptions}
+   */
+  initialSortField: ?SortOptions,
+  /**
+   * A collection of field specifications
+   *
+   * @type {Array<ColumnDef>}
+   */
   columnDefs: Array<ColumnDef>,
+  /**
+   * Called when a cell is clicked
+   *
+   * @type {CellClicked}
+   */
   cellClicked: CellClicked,
+  /**
+   * The table data (a valid JSON array)
+   *
+   * @type {Array<Object>}
+   */
   data: Array<Object>,
+
   hidden: boolean,
+
   tag: string | number,
   bordered?: boolean,
   borderless?: boolean,
@@ -27,22 +66,22 @@ export type TableProps = {
   dark?: boolean,
   hover?: boolean,
   responsive?: boolean,
-  Data: Array<Object>,
   size: string
 };
 
 class TableState {
   constructor(props: TableProps) {
     this.HasData = props && props.data && props.data.length > 0;
-    this.TotalPages = this.HasData
-      ? props.data.length / props.pagesDisplayed
-      : 0;
+
+    if (props.pagingOptions && this.HasData) {
+      this.TotalPages = props.pagingOptions.getTotalPages(props.data.length);
+    }
     this.CurrentPage = this.HasData ? 1 : 0;
     this.SortedData = this.HasData ? props.data : [];
     this.ColumnDefs = TableState.getColumnDefs(props);
   }
 
-  TotalPages: number;
+  TotalPages: ?number;
   HasData: boolean;
   CurrentPage: number;
   SortedData: Array<Object>;
@@ -158,13 +197,20 @@ export default class ReactstrapTable extends React.Component<
     if (!this.state.HasData) {
       return [];
     }
-    const start = (this.state.CurrentPage - 1) * this.props.pagesDisplayed;
-    const end = start + this.props.pagesDisplayed;
 
-    const body = this.state.SortedData.slice(start, end).map(
-      (row: UniqueRow) => <tr key={row.Id}>{this.getRowCells(row)}</tr>
-    );
-    console.log(body);
+    let data = this.state.SortedData;
+
+    if (this.props.pagingOptions) {
+      const start =
+        (this.state.CurrentPage - 1) * this.props.pagingOptions.PagesDisplayed;
+      const end = start + this.props.pagingOptions.PagesDisplayed;
+      data = data.slice(start, end);
+    }
+
+    const body = data.map((row: UniqueRow) => (
+      <tr key={row.Id}>{this.getRowCells(row)}</tr>
+    ));
+
     return body;
   }
 
