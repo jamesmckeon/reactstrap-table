@@ -15,9 +15,7 @@
         "release": "webpack --p --config webpack.config.babel.js",
         "test": "jest",
         "coverage": "jest --coverage",
-        "deploy": "",
         "lint": "eslint ./src ./tests",
-        "start": "",
         "flow": "flow",
         "flow status": "flow status",
         "flow start": "flow start"

@@ -1,13 +1,11 @@
 // @flow
 
 import * as React from "react";
-
+import Sorter from "Sorter";
 import Pager from "reactstrap-pager";
 import { Table } from "reactstrap";
-import Column, { SortableColumn, ColumnDef } from "./Columns";
-import TableCell, { type CellClicked } from "./TableCell";
-
-import Sorter from "./Sorter";
+import Column, { SortableColumn, ColumnDef } from "Columns";
+import TableCell, { type CellClicked } from "TableCell";
 
 const CenteredText = (props: { children: React.Node }) => (
   <div className="text-center font-italic">

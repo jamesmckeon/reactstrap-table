@@ -1,11 +1,12 @@
 import path from "path";
 import webpack from "webpack";
 import CleanWebpackPlugin from "clean-webpack-plugin";
+
 const packageJson = require("./package.json");
 
 export default () => ({
   entry: {
-    index: path.join(__dirname, "src/index.js")
+    index: path.join(__dirname, "src/ReactstrapTable.jsx")
   },
 
   output: {
@@ -38,13 +39,16 @@ export default () => ({
       }
     ]
   },
-
+  resolve: {
+    modules: [path.resolve(__dirname, "src"), "node_modules"],
+    extensions: [".js", ".jsx"]
+  },
   plugins: [
     // Clean dist folder
     new CleanWebpackPlugin(["dist/*.*"]),
 
-    //CommonChunksPlugin will now extract all the common modules from vendor and main bundles
-    //https://medium.com/@adamrackis/vendor-and-code-splitting-in-webpack-2-6376358f1923
+    // CommonChunksPlugin will now extract all the common modules from vendor and main bundles
+    // https://medium.com/@adamrackis/vendor-and-code-splitting-in-webpack-2-6376358f1923
     new webpack.optimize.CommonsChunkPlugin({
       name: "vendor",
       minChunks(module) {
