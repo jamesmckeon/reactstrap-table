@@ -1,37 +1,9 @@
 // @flow
 
 import * as React from "react";
-import StyleBuilder from "./StyleBuilder";
-import SortControl from "./SortControl";
-
-export type BreakPoints = "sm" | "md" | "lg" | "xl";
-
-export class ColumnDef {
-  constructor(
-    fieldName: string,
-    headerText: ?string,
-    sortable: ?boolean,
-    headerStyle: ?InlineStyle,
-    tooltipText: ?string,
-    hiddenBelow: ?BreakPoints,
-    clickable: ?boolean
-  ) {
-    this.FieldName = fieldName;
-    this.HeaderText = headerText;
-    this.Sortable = sortable || false;
-    this.HeaderStyle = headerStyle || null;
-    this.HiddenBelow = hiddenBelow || null;
-    this.TooltipText = tooltipText || null;
-    this.Clickable = clickable || false;
-  }
-  FieldName: string;
-  HeaderText: ?string;
-  Sortable: boolean;
-  HeaderStyle: ?InlineStyle;
-  HiddenBelow: ?BreakPoints;
-  TooltipText: ?string;
-  Clickable: boolean;
-}
+import StyleBuilder from "StyleBuilder";
+import SortControl from "SortControl";
+import type ColumnDef from "ColumnDef";
 
 export type ColumnProps = {
   columnDef: ColumnDef,
@@ -50,6 +22,7 @@ const Column = (props: ColumnProps) => {
 Column.defaultProps = {
   children: null
 };
+
 export default Column;
 
 export type SortClicked = (fieldName: string, ascending: boolean) => void;

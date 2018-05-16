@@ -3,8 +3,8 @@
 import * as React from "react";
 
 import { UncontrolledTooltip, Button } from "reactstrap";
-import { ColumnDef } from "./Columns";
-import StyleBuilder from "./StyleBuilder";
+import type ColumnDef from "ColumnDef";
+import StyleBuilder from "StyleBuilder";
 
 export type CellClicked = (fieldName: string, val: string) => void;
 type TableCellProps = {

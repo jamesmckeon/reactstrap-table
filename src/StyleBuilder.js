@@ -1,5 +1,5 @@
 // @flow
-import { type ColumnDef } from "./Columns";
+import type ColumnDef from "ColumnDef";
 
 export default class StyleBuilder {
   static StyleTableCell = (columnDef: ColumnDef) =>

@@ -4,9 +4,10 @@ import * as React from "react";
 import Sorter from "Sorter";
 import Pager from "reactstrap-pager";
 import { Table } from "reactstrap";
-import Column, { SortableColumn, ColumnDef } from "Columns";
-import TableCell, { type CellClicked } from "TableCell";
-import PagingOptions from "PagingOptions";
+import Column, { SortableColumn } from "Columns";
+import ColumnDef from "ColumnDef";
+import TableCell from "TableCell";
+import TableProps from "TableProps";
 
 const CenteredText = (props: { children: React.Node }) => (
   <div className="text-center font-italic">
@@ -14,60 +15,6 @@ const CenteredText = (props: { children: React.Node }) => (
     <hr />
   </div>
 );
-
-export class SortOptions {
-  constructor(fieldName: string, ascending: boolean) {
-    this.FieldName = fieldName;
-    this.Ascending = ascending;
-  }
-
-  FieldName: string;
-  Ascending: boolean;
-}
-
-export type TableProps = {
-  /**
-   *
-   *
-   * @type {?PagingOptions}
-   */
-  pagingOptions: ?PagingOptions,
-  /**
-   * Specified the default sort field for a table
-   *
-   * @type {?SortOptions}
-   */
-  initialSortField: ?SortOptions,
-  /**
-   * A collection of field specifications
-   *
-   * @type {Array<ColumnDef>}
-   */
-  columnDefs: Array<ColumnDef>,
-  /**
-   * Called when a cell is clicked
-   *
-   * @type {CellClicked}
-   */
-  cellClicked: CellClicked,
-  /**
-   * The table data (a valid JSON array)
-   *
-   * @type {Array<Object>}
-   */
-  data: Array<Object>,
-
-  hidden: boolean,
-
-  tag: string | number,
-  bordered?: boolean,
-  borderless?: boolean,
-  striped?: boolean,
-  dark?: boolean,
-  hover?: boolean,
-  responsive?: boolean,
-  size: string
-};
 
 class TableState {
   constructor(props: TableProps) {
@@ -79,8 +26,10 @@ class TableState {
     this.CurrentPage = this.HasData ? 1 : 0;
     this.SortedData = this.HasData ? props.data : [];
     this.ColumnDefs = TableState.getColumnDefs(props);
+    this.ShowPager = this.TotalPages != null && this.TotalPages > 1;
   }
 
+  ShowPager: boolean;
   TotalPages: ?number;
   HasData: boolean;
   CurrentPage: number;
@@ -114,7 +63,13 @@ class TableState {
 type UniqueRow = {
   Id: number
 };
-
+/**
+ * A React component that renders an HTML table with optional paging and sorting using reactstrap
+ *
+ * @export
+ * @class ReactstrapTable
+ * @extends {React.Component<TableProps, TableState>}
+ */
 export default class ReactstrapTable extends React.Component<
   TableProps,
   TableState
@@ -142,7 +97,7 @@ export default class ReactstrapTable extends React.Component<
     }
     return (
       <tr>
-        {this.state.ColumnDefs.map((c, i) => {
+        {this.state.ColumnDefs.map((c: ColumnDef, i) => {
           if (c.Sortable) {
             return (
               <SortableColumn
@@ -270,11 +225,13 @@ export default class ReactstrapTable extends React.Component<
           <thead>{this.getHeaders()}</thead>
           <tbody>{this.getBody()}</tbody>
         </Table>
-        <Pager
-          {...this.props}
-          totalPages={this.state.TotalPages}
-          pageChanged={this.pageChanged}
-        />
+        {this.state.ShowPager && (
+          <Pager
+            {...this.props}
+            totalPages={this.state.TotalPages}
+            pageChanged={this.pageChanged}
+          />
+        )}
       </div>
     ) : (
       <CenteredText>No records</CenteredText>
