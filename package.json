@@ -58,6 +58,7 @@
         "modulePaths": [
             "./src"
         ],
+        "testMatch": ["**/tests/*.tests.js"],
         "moduleFileExtensions": [
             "js",
             "jsx"
