@@ -2,17 +2,9 @@
 
 import * as React from "react";
 
-import { UncontrolledTooltip } from "reactstrap";
+import { UncontrolledTooltip, Button } from "reactstrap";
 import { ColumnDef } from "./Columns";
 import StyleBuilder from "./StyleBuilder";
-
-const cellClass = hideDown => {
-  if (hideDown) {
-    return `d-none d-${hideDown}-table-cell`;
-  } else {
-    return "align-middle";
-  }
-};
 
 export type CellClicked = (fieldName: string, val: string) => void;
 type TableCellProps = {
@@ -22,8 +14,8 @@ type TableCellProps = {
   children: React.Node
 };
 
-export const TableCell = (props: TableCellProps) => {
-  const CellClicked = (e: any) => {
+const TableCell = (props: TableCellProps) => {
+  const onCellClicked = (e: any) => {
     e.preventDefault();
     if (props.onClick) {
       props.onClick(
@@ -35,14 +27,15 @@ export const TableCell = (props: TableCellProps) => {
 
   return props.columnDef.Clickable ? (
     <td className={StyleBuilder.StyleTableCell(props.columnDef)}>
-      <a
+      <Button
+        color="link"
         data-fieldname={props.columnDef.FieldName}
         href=""
-        onClick={CellClicked}
+        onClick={onCellClicked}
         id={props.id}
       >
         {props.children}
-      </a>
+      </Button>
       {props.columnDef.TooltipText && (
         <UncontrolledTooltip target={props.id} placement="top">
           {props.columnDef.TooltipText}
@@ -53,3 +46,9 @@ export const TableCell = (props: TableCellProps) => {
     <td id={props.id}>{props.children}</td>
   );
 };
+
+TableCell.defaultProps = {
+  onClick: null
+};
+
+export default TableCell;

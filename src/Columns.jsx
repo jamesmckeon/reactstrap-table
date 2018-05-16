@@ -1,14 +1,8 @@
 // @flow
 
 import * as React from "react";
-import ReactDOM from "react-dom";
-
 import StyleBuilder from "./StyleBuilder";
-import SortButtonGroup from "./SortControl";
-import {
-  default as SortControl,
-  type SortClicked as SortButtonClicked
-} from "./SortControl";
+import SortControl from "./SortControl";
 
 export type BreakPoints = "sm" | "md" | "lg" | "xl";
 
@@ -41,11 +35,10 @@ export class ColumnDef {
 
 export type ColumnProps = {
   columnDef: ColumnDef,
-  children?: React.Node,
-  ordinal: number
+  children?: React.Node
 };
 
-export const Column = (props: ColumnProps) => {
+const Column = (props: ColumnProps) => {
   const className = StyleBuilder.StyleTableHeader(props.columnDef);
   return (
     <th style={props.columnDef.HeaderStyle || {}} className={className}>
@@ -54,13 +47,18 @@ export const Column = (props: ColumnProps) => {
   );
 };
 
-export type SortClicked = (ordinal: number, ascending: boolean) => void;
+Column.defaultProps = {
+  children: null
+};
+export default Column;
+
+export type SortClicked = (fieldName: string, ascending: boolean) => void;
 
 export type SortableColumnProps = ColumnProps & { sortClicked: SortClicked };
 
 export const SortableColumn = (props: SortableColumnProps) => {
   const sortClicked = (ascending: boolean) => {
-    props.sortClicked(props.ordinal, ascending);
+    props.sortClicked(props.columnDef.FieldName, ascending);
   };
 
   const className = StyleBuilder.StyleTableHeader(props.columnDef);

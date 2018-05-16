@@ -4,10 +4,10 @@ import * as React from "react";
 
 import Pager from "reactstrap-pager";
 import { Table } from "reactstrap";
-import { Column, SortableColumn, ColumnDef } from "./Columns";
-import { TableCell, type CellClicked } from "./TableCell";
+import Column, { SortableColumn, ColumnDef } from "./Columns";
+import TableCell, { type CellClicked } from "./TableCell";
 
-import { Sorter } from "./Sorter";
+import Sorter from "./Sorter";
 
 const CenteredText = (props: { children: React.Node }) => (
   <div className="text-center font-italic">
@@ -185,13 +185,12 @@ export default class ReactstrapTable extends React.Component<
     return data;
   };
 
-  sortClicked = (ordinal: number, sortAscending: boolean) => {
+  sortClicked = (fieldName: string, sortAscending: boolean) => {
     if (!this.state.SortedData) {
       throw new Error("no data to sort");
     }
     const data = this.state.SortedData;
-    const row = data[0];
-    const fieldName = Object.keys(row)[ordinal];
+
     const sortedData = Sorter.Sort(data, fieldName, sortAscending);
     this.setState({
       SortedData: sortedData

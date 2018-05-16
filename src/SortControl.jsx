@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { ButtonGroup, Button, ButtonToolbar } from "reactstrap";
+import { ButtonGroup, Button } from "reactstrap";
 import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 import UpIcon from "@fortawesome/fontawesome-free-solid/faAngleUp";
 import DownIcon from "@fortawesome/fontawesome-free-solid/faAngleDown";
@@ -33,14 +33,14 @@ const SortControl = (props: SortControlProps) => {
         <FontAwesomeIcon
           icon={UpIcon}
           transform={iconSize}
-          //className="sort-icon"
+          // className="sort-icon"
         />
       </Button>
       <Button outline onClick={downClicked}>
         <FontAwesomeIcon
           icon={DownIcon}
           transform={iconSize}
-          //className="sort-icon"
+          // className="sort-icon"
         />
       </Button>
     </ButtonGroup>

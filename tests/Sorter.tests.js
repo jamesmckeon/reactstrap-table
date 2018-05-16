@@ -3,7 +3,7 @@ import moment from "moment";
 import { configure } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import { assert } from "chai";
-import { Sorter } from "../src/Sorter";
+import Sorter from "../src/Sorter";
 
 configure({ adapter: new Adapter() });
 

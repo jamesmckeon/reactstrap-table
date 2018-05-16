@@ -1,14 +1,10 @@
 // @flow
-import { ColumnDef } from "./Columns";
+import { type ColumnDef } from "./Columns";
 
 export default class StyleBuilder {
-  static StyleTableCell = (columnDef: ColumnDef) => {
-    return columnDef.HiddenBelow
-      ? `d-none d-${columnDef.HiddenBelow}-table-cell`
-      : "";
-  };
+  static StyleTableCell = (columnDef: ColumnDef) =>
+    columnDef.HiddenBelow ? `d-none d-${columnDef.HiddenBelow}-table-cell` : "";
 
-  static StyleTableHeader = (columnDef: ColumnDef) => {
-    return this.StyleTableCell(columnDef) + " align-middle";
-  };
+  static StyleTableHeader = (columnDef: ColumnDef) =>
+    `${this.StyleTableCell(columnDef)} align-middle`;
 }
