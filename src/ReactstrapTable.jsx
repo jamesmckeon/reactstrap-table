@@ -16,56 +16,46 @@ const CenteredText = (props: { children: React.Node }) => (
   </div>
 );
 
-class TableState {
-  constructor(props: TableProps) {
-    this.HasData = props && props.data && props.data.length > 0;
+type TableState = {
+  ShowPager: boolean,
+  TotalPages: number,
+  HasData: boolean,
+  CurrentPage: number,
+  SortedData: Array<Object>,
+  ColumnDefs: Array<ColumnDef>
+};
 
-    if (props.pagingOptions && this.HasData) {
-      this.TotalPages = props.pagingOptions.getTotalPages(props.data.length);
-    }
-    this.CurrentPage = this.HasData ? 1 : 0;
-    this.SortedData = this.HasData ? TableState.formatData(props.data) : [];
-    this.ColumnDefs = TableState.getColumnDefs(props);
-    this.ShowPager = this.TotalPages != null && this.TotalPages > 1;
-  }
+type UniqueRow = {
+  reactKey: number
+};
 
-  ShowPager: boolean;
-  TotalPages: ?number;
-  HasData: boolean;
-  CurrentPage: number;
-  SortedData: Array<Object>;
-  ColumnDefs: Array<ColumnDef>;
-
-  // builds column defs
-  static getColumnDefs(props: TableProps): Array<ColumnDef> {
+const buildState = (props: TableProps): TableState => {
+  const getColumnDefs = (): Array<ColumnDef> => {
     if (!props || !props.data || props.data.length === 0) {
       return [];
     }
     // no columndefs provided, use first row in data
     const row = props.data[0];
 
-    return Object.keys(row).map((fieldName: string) => {
-      // find columnDef based on field name
-      const def =
-        props.columnDefs &&
-        props.columnDefs.find(d => d.FieldName === fieldName);
+    // iterate over each column in row except for reactKey
+    return Object.keys(row)
+      .filter(f => f !== "reactKey")
+      .map((fieldName: string) => {
+        // find columnDef based on field name
+        const def =
+          props.columnDefs &&
+          props.columnDefs.find((d: ColumnDef) => d.fieldName === fieldName);
 
-      // if a column def has been provided for this ordinal, use it
-      if (def) {
-        return def;
-      }
-      // otherwise, use fieldname for header text
-      return { fieldName, headerText: fieldName };
-    });
-  }
+        // if a column def has been provided for this ordinal, use it
+        if (def) {
+          return def;
+        }
+        // otherwise, use fieldname for header text
+        return { fieldName, headerText: fieldName };
+      });
+  };
 
-  /**
-   *
-   *Adds Id field to data
-   * @param {Array<Object>} data
-   * @returns {Array<UniqueRow>}
-   */
-  static formatData = (data: Array<Object>): Array<UniqueRow> => {
+  const formatData = (data: Array<Object>): Array<UniqueRow> => {
     if (data && data.length > 0) {
       let id = 1;
       const ret = data.map((r: Object) => {
@@ -79,11 +69,22 @@ class TableState {
     }
     return data;
   };
-}
 
-type UniqueRow = {
-  reactKey: number
+  const state = {};
+  state.HasData = props && props.data && props.data.length > 0;
+
+  state.TotalPages = state.HasData ? 1 : 0;
+  if (props.pagingOptions && state.HasData) {
+    state.TotalPages = props.pagingOptions.getTotalPages(props.data.length);
+  }
+  state.CurrentPage = state.HasData ? 1 : 0;
+  state.SortedData = state.HasData ? formatData(props.data) : [];
+  state.ColumnDefs = getColumnDefs();
+  state.ShowPager = state.TotalPages != null && state.TotalPages > 1;
+
+  return state;
 };
+
 /**
  * A React component that renders an HTML table with optional paging and sorting using reactstrap
  *
@@ -105,10 +106,10 @@ export default class ReactstrapTable extends React.Component<
     pagesDisplayed: 5
   };
 
-  state = new TableState(this.props);
+  state = buildState(this.props);
 
   componentWillReceiveProps = (newProps: TableProps) => {
-    const newState = new TableState(newProps);
+    const newState = buildState(newProps);
     this.setState(newState);
   };
 
@@ -151,25 +152,28 @@ export default class ReactstrapTable extends React.Component<
 
   getRowCells = (row: UniqueRow) => {
     let colId = 1;
-    return Object.keys(row).map(fieldName => {
-      const def = this.getColumnDef(fieldName);
+    // iterate over each column in row except for reactKey
+    return Object.keys(row)
+      .filter(f => f !== "reactKey")
+      .map(fieldName => {
+        const def = this.getColumnDef(fieldName);
 
-      if (!def) {
-        throw new Error("missing columnDef");
-      }
-      colId += 1;
+        if (!def) {
+          throw new Error("missing columnDef");
+        }
+        colId += 1;
 
-      return (
-        <TableCell
-          id={`r${row.reactKey}c${colId}`}
-          key={colId}
-          onClick={this.props.cellClicked}
-          columnDef={def}
-        >
-          {row[fieldName].toString()}
-        </TableCell>
-      );
-    });
+        return (
+          <TableCell
+            id={`r${row.reactKey}c${colId}`}
+            key={colId}
+            onClick={this.props.cellClicked}
+            columnDef={def}
+          >
+            {row[fieldName].toString()}
+          </TableCell>
+        );
+      });
   };
   getBody = () => {
     if (!this.state.HasData) {
