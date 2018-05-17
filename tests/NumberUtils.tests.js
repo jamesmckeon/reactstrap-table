@@ -1,6 +1,7 @@
 // @flow
 
-import { isNumber } from "NumberUtils";
+import { isNumber, parseNumber } from "NumberUtils";
+import * as TestUtils from "./TestUtils";
 
 describe("NumberUtils", () => {
   describe("isNumber", () => {
@@ -55,6 +56,33 @@ describe("NumberUtils", () => {
     });
     it("undefined", () => {
       expect(isNumber(undefined)).toBeFalsy();
+    });
+  });
+
+  describe("ParseNumber", () => {
+    it("1", () => {
+      expect(parseNumber(1)).toEqual(1);
+    });
+
+    it(".5", () => {
+      expect(parseNumber("0.5")).toEqual(0.5);
+    });
+
+    it("-1", () => {
+      expect(parseNumber("-1")).toEqual(-1);
+    });
+    it("0", () => {
+      expect(parseNumber("0")).toEqual(0);
+    });
+
+    it("-01", () => {
+      expect(parseNumber("-01")).toEqual(-1);
+    });
+    it("-001", () => {
+      expect(parseNumber("-01")).toEqual(-1);
+    });
+    it("a", () => {
+      expect(parseNumber("a")).toBeNullOrUndefined();
     });
   });
 });
