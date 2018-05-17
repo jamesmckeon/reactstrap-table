@@ -5,7 +5,7 @@ import Sorter from "Sorter";
 import Pager from "reactstrap-pager";
 import { Table } from "reactstrap";
 import Column, { SortableColumn } from "Columns";
-import ColumnDef from "ColumnDef";
+import { type ColumnDef } from "ColumnDef";
 import TableCell from "TableCell";
 import TableProps from "TableProps";
 
@@ -24,7 +24,7 @@ class TableState {
       this.TotalPages = props.pagingOptions.getTotalPages(props.data.length);
     }
     this.CurrentPage = this.HasData ? 1 : 0;
-    this.SortedData = this.HasData ? props.data : [];
+    this.SortedData = this.HasData ? TableState.formatData(props.data) : [];
     this.ColumnDefs = TableState.getColumnDefs(props);
     this.ShowPager = this.TotalPages != null && this.TotalPages > 1;
   }
@@ -55,13 +55,34 @@ class TableState {
         return def;
       }
       // otherwise, use fieldname for header text
-      return new ColumnDef(fieldName, fieldName);
+      return { fieldName, headerText: fieldName };
     });
   }
+
+  /**
+   *
+   *Adds Id field to data
+   * @param {Array<Object>} data
+   * @returns {Array<UniqueRow>}
+   */
+  static formatData = (data: Array<Object>): Array<UniqueRow> => {
+    if (data && data.length > 0) {
+      let id = 1;
+      const ret = data.map((r: Object) => {
+        const newRow = r;
+        newRow.reactKey = id;
+        id += 1;
+        return newRow;
+      });
+
+      return ret;
+    }
+    return data;
+  };
 }
 
 type UniqueRow = {
-  Id: number
+  reactKey: number
 };
 /**
  * A React component that renders an HTML table with optional paging and sorting using reactstrap
@@ -91,43 +112,44 @@ export default class ReactstrapTable extends React.Component<
     this.setState(newState);
   };
 
-  getHeaders() {
+  getHeaders = () => {
     if (!this.state.ColumnDefs) {
       throw new Error("ColumnDefs are missing");
     }
+
     return (
       <tr>
         {this.state.ColumnDefs.map((c: ColumnDef, i) => {
-          if (c.Sortable) {
+          if (c.sortable) {
             return (
               <SortableColumn
-                key={c.FieldName}
+                key={c.fieldName}
                 ordinal={i}
                 columnDef={c}
                 sortClicked={this.sortClicked}
               >
-                {c.HeaderText}
+                {c.headerText}
               </SortableColumn>
             );
           }
           return (
-            <Column key={c.FieldName} ordinal={i} columnDef={c}>
-              {c.HeaderText}
+            <Column key={c.fieldName} ordinal={i} columnDef={c}>
+              {c.headerText}
             </Column>
           );
         })}
       </tr>
     );
-  }
+  };
 
-  getColumnDef(fieldName: string) {
+  getColumnDef = (fieldName: string) => {
     if (!this.state.ColumnDefs) {
       throw new Error("ColumnDefs are missing");
     }
-    return this.state.ColumnDefs.find(def => def.FieldName === fieldName);
-  }
+    return this.state.ColumnDefs.find(def => def.fieldName === fieldName);
+  };
 
-  getRowCells(row: UniqueRow) {
+  getRowCells = (row: UniqueRow) => {
     let colId = 1;
     return Object.keys(row).map(fieldName => {
       const def = this.getColumnDef(fieldName);
@@ -136,9 +158,10 @@ export default class ReactstrapTable extends React.Component<
         throw new Error("missing columnDef");
       }
       colId += 1;
+
       return (
         <TableCell
-          id={`r${row.Id}c${colId}`}
+          id={`r${row.reactKey}c${colId}`}
           key={colId}
           onClick={this.props.cellClicked}
           columnDef={def}
@@ -147,8 +170,8 @@ export default class ReactstrapTable extends React.Component<
         </TableCell>
       );
     });
-  }
-  getBody() {
+  };
+  getBody = () => {
     if (!this.state.HasData) {
       return [];
     }
@@ -163,31 +186,10 @@ export default class ReactstrapTable extends React.Component<
     }
 
     const body = data.map((row: UniqueRow) => (
-      <tr key={row.Id}>{this.getRowCells(row)}</tr>
+      <tr key={row.reactKey}>{this.getRowCells(row)}</tr>
     ));
 
     return body;
-  }
-
-  /**
-   *
-   *Adds Id field to data
-   * @param {Array<Object>} data
-   * @returns {Array<UniqueRow>}
-   */
-  formatData = (data: Array<Object>): Array<UniqueRow> => {
-    if (data && data.length > 0) {
-      if (!data[0].id) {
-        let id = 1;
-        return data.map((r: Object) => {
-          const newRow = r;
-          newRow.id = id;
-          id += 1;
-          return newRow;
-        });
-      }
-    }
-    return data;
   };
 
   sortClicked = (fieldName: string, sortAscending: boolean) => {
@@ -206,7 +208,7 @@ export default class ReactstrapTable extends React.Component<
     this.setState({ CurrentPage: pageNum });
   };
 
-  render() {
+  render = () => {
     if (this.props.hidden) {
       return null;
     }
@@ -236,5 +238,5 @@ export default class ReactstrapTable extends React.Component<
     ) : (
       <CenteredText>No records</CenteredText>
     );
-  }
+  };
 }
