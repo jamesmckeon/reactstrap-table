@@ -1,21 +1,19 @@
 // @flow
 import moment from "moment";
+import { isNumber, parseNumber } from "NumberUtils";
 
-const isNumber = (val: any): boolean =>
-  // https://stackoverflow.com/a/9716488/1342632
-  !Number.isNaN(parseFloat(val)) && Number.isFinite(val);
-
-const isDate = (val: any): boolean => !isNumber(val) && moment(val).isValid();
+export const isDate = (val: any): boolean =>
+  !isNumber(val) && moment(val).isValid();
 
 const getComparer = (val: any, fieldName: string, ascending: boolean) => {
   // number check has to preceed date check, as JS will convert numbers to dates
   if (isNumber(val)) {
     return (a: Object, b: Object): number =>
       ascending
-        ? parseFloat(a[fieldName]) - parseFloat(b[fieldName])
-        : parseFloat(b[fieldName]) - parseFloat(a[fieldName]);
+        ? parseNumber(a[fieldName]) - parseNumber(b[fieldName])
+        : parseNumber(b[fieldName]) - parseNumber(a[fieldName]);
   } else if (isDate(val)) {
-    return (a: Object, b: Object) => {
+    return (a: Object, b: Object): number => {
       const momentA = ascending ? moment(a[fieldName]) : moment(b[fieldName]);
       const momentB = ascending ? moment(b[fieldName]) : moment(a[fieldName]);
 
@@ -27,7 +25,7 @@ const getComparer = (val: any, fieldName: string, ascending: boolean) => {
       return 0;
     };
   }
-  return (a: Object, b: Object) => {
+  return (a: Object, b: Object): number => {
     const valA = ascending ? a[fieldName] : b[fieldName];
     const valB = ascending ? b[fieldName] : a[fieldName];
 

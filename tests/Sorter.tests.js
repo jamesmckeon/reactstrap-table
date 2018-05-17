@@ -3,7 +3,7 @@ import moment from "moment";
 import { configure } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import { assert } from "chai";
-import Sorter from "../src/Sorter";
+import Sorter from "Sorter";
 
 configure({ adapter: new Adapter() });
 
@@ -95,6 +95,7 @@ describe("Sorter", () => {
       }
     });
   });
+
   it("sorts number ascending", () => {
     const fieldName = "age";
     const result = Sorter.Sort(getTestData(), fieldName, true);
@@ -102,6 +103,7 @@ describe("Sorter", () => {
     let previous = Number(result[0][fieldName]);
     for (let i = 1; i < result.length; i += 1) {
       const current = Number(result[i][fieldName]);
+
       assert.isBelow(previous, current);
       previous = current;
     }
