@@ -4,16 +4,21 @@ import PagingOptions from "PagingOptions";
 import { type ColumnDef } from "ColumnDef";
 import SortOptions from "SortOptions";
 import { type CellClicked } from "TableCell";
-
+/**
+ * Props for the ReactstrapTable component
+ *
+ * @export
+ * @class TableProps
+ */
 export default class TableProps {
   /**
-   *
+   * Options for the Pager component.  If not provided, paging is diabled (i.e., the Pager is not displayed)
    *
    * @type {?PagingOptions}
    */
   pagingOptions: ?PagingOptions;
   /**
-   * Specified the default sort field for a table
+   * Table data will be sorted as specified by this setting on initial render (if provided)
    *
    * @type {?SortOptions}
    */

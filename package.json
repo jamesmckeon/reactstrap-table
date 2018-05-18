@@ -18,7 +18,11 @@
         "lint": "eslint ./src ./tests",
         "flow": "flow",
         "flow status": "flow status",
-        "flow start": "flow start"
+        "flow start": "flow start",
+        "doc": "documentation build src/** -f html -o docs",
+        "doc watch": "documentation serve --watch app.js",
+        "doc readme": "documentation readme -s Documentation src/**"
+
     },
     "dependencies": {
         "@fortawesome/fontawesome": "^1.1.8",
