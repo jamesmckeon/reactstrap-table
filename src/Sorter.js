@@ -6,6 +6,13 @@ export const isDate = (val: any): boolean =>
   !isNumber(val) && moment(val).isValid();
 
 const getComparer = (val: any, fieldName: string, ascending: boolean) => {
+  if (!val) {
+    throw new Error("val is empty");
+  }
+
+  if (!fieldName) {
+    throw new Error("fieldName is empty");
+  }
   // number check has to preceed date check, as JS will convert numbers to dates
   if (isNumber(val)) {
     return (a: Object, b: Object): number =>
