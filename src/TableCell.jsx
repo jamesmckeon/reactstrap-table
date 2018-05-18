@@ -3,7 +3,7 @@
 import * as React from "react";
 
 import { UncontrolledTooltip, Button } from "reactstrap";
-import type ColumnDef from "ColumnDef";
+import { type ColumnDef } from "ColumnDef";
 import StyleBuilder from "StyleBuilder";
 
 export type CellClicked = (fieldName: string, val: string) => void;
@@ -25,20 +25,20 @@ const TableCell = (props: TableCellProps) => {
     }
   };
 
-  return props.columnDef.Clickable ? (
+  return props.columnDef.clickable ? (
     <td className={StyleBuilder.StyleTableCell(props.columnDef)}>
       <Button
         color="link"
-        data-fieldname={props.columnDef.FieldName}
+        data-fieldname={props.columnDef.fieldName}
         href=""
         onClick={onCellClicked}
         id={props.id}
       >
         {props.children}
       </Button>
-      {props.columnDef.TooltipText && (
+      {props.columnDef.tooltipText && (
         <UncontrolledTooltip target={props.id} placement="top">
-          {props.columnDef.TooltipText}
+          {props.columnDef.tooltipText}
         </UncontrolledTooltip>
       )}
     </td>

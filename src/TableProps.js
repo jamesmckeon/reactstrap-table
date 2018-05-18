@@ -1,7 +1,7 @@
 // @flow
 
 import PagingOptions from "PagingOptions";
-import type ColumnDef from "ColumnDef";
+import { type ColumnDef } from "ColumnDef";
 import SortOptions from "SortOptions";
 import { type CellClicked } from "TableCell";
 
