@@ -1,26 +1,26 @@
 // @flow
 
 export const parseNumber = (val: any): ?number => {
+  if (val === null || typeof val === "undefined" || val === "") {
+    return null;
+  }
   if (typeof val === "number" && Number.isFinite(val)) {
     return val;
-  } else if (typeof val === "string") {
-    // if val starts with "-0" and includes a non-zero, remove the "0"'s
-    // -01 = -1
-    // -0010 = -10
-    // -0010.10 = -10.10
-    // -0000000 = -0000000
-    let cleanVal = val.trim();
-
-    if (
-      cleanVal.startsWith("-0") &&
-      cleanVal.includes("0") &&
-      RegExp("[1-9]").test(cleanVal)
-    ) {
-      // get the index of the first non zero after the hyphen
-      const end = cleanVal.slice(1).search(RegExp("[1-9]"));
-      cleanVal = cleanVal.slice(2, end);
-    }
-    return cleanVal.replace(RegExp("[^0-9.]", "g"), "").trim();
+  } else if (
+    // string containing digits, a single hyphen and/or period and not ending in hyphen or period
+    typeof val === "string" &&
+    !val.match(RegExp("[^0-9.-]", "g")) &&
+    val.split(".").length < 3 &&
+    val.split("-").length < 3 &&
+    !val.endsWith(".") &&
+    !val.endsWith("-")
+  ) {
+    return parseFloat(
+      val
+        .trim()
+        .replace(RegExp("[^0-9.-]", "g"), "")
+        .trim()
+    );
   }
   return null;
 };

@@ -1,13 +1,21 @@
 // @flow
 
 import { isNumber, parseNumber } from "NumberUtils";
-import * as TestUtils from "./TestUtils";
+import "./TestUtils";
 
 describe("NumberUtils", () => {
   describe("isNumber", () => {
     it("1", () => {
       expect(isNumber(1)).toBeTruthy();
+    });
+    it("1 1", () => {
+      expect(isNumber("1 1")).toBeFalsy();
+    });
+    it("1 as string", () => {
       expect(isNumber("1")).toBeTruthy();
+    });
+
+    it("01", () => {
       expect(isNumber("01")).toBeTruthy();
     });
 
@@ -27,9 +35,7 @@ describe("NumberUtils", () => {
     it("0", () => {
       expect(isNumber(0)).toBeTruthy();
     });
-    it("-01", () => {
-      expect(isNumber("-01")).toBeTruthy();
-    });
+
     it("-001", () => {
       expect(isNumber("-01")).toBeTruthy();
     });
@@ -57,9 +63,21 @@ describe("NumberUtils", () => {
     it("undefined", () => {
       expect(isNumber(undefined)).toBeFalsy();
     });
+    it("-", () => {
+      expect(isNumber("-")).toBeFalsy();
+    });
+    it(".", () => {
+      expect(isNumber(".")).toBeFalsy();
+    });
+    it(".1.", () => {
+      expect(isNumber(".1.")).toBeFalsy();
+    });
   });
 
   describe("ParseNumber", () => {
+    it("1e+2", () => {
+      expect(parseNumber("1e+2")).toEqual(100);
+    });
     it("1", () => {
       expect(parseNumber(1)).toEqual(1);
     });
@@ -72,6 +90,9 @@ describe("NumberUtils", () => {
       expect(parseNumber("-1")).toEqual(-1);
     });
     it("0", () => {
+      expect(parseNumber(0)).toEqual(0);
+    });
+    it("0 as string", () => {
       expect(parseNumber("0")).toEqual(0);
     });
 
