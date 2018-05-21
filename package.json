@@ -1,6 +1,6 @@
 {
     "name": "@jbmckeon/reactstrap-table",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "license": "MIT",
     "author": {
         "name": "James McKeon",
@@ -71,7 +71,7 @@
             "./src"
         ],
         "testMatch": [
-            "**/tests/*.tests.js"
+            "**/tests/*.tests.js*"
         ],
         "moduleFileExtensions": [
             "js",

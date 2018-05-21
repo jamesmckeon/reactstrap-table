@@ -1,9 +1,9 @@
 // @flow
 
 export default class SortOptions {
-  constructor(fieldName: string, ascending: boolean) {
+  constructor(fieldName: string, ascending?: boolean) {
     this.FieldName = fieldName;
-    this.Ascending = ascending;
+    this.Ascending = ascending || false;
   }
 
   FieldName: string;

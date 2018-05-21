@@ -18,32 +18,32 @@ export default class TableProps {
    */
   pagingOptions: ?PagingOptions;
   /**
-   * Table data will be sorted as specified by this setting on initial render (if provided)
+   * Table data will be sorted as specified by this setting when rendered (if provided)
    *
    * @type {?SortOptions}
    */
-  initialSortField: ?SortOptions;
+  initialSort: ?SortOptions;
   /**
    * A collection of field specifications
    *
    * @type {Array<ColumnDef>}
    */
-  columnDefs: Array<ColumnDef>;
+  columnDefs: ?Array<ColumnDef>;
   /**
    * Called when a cell is clicked
    *
    * @type {CellClicked}
    */
-  cellClicked: CellClicked;
+  cellClicked: ?CellClicked;
   /**
    * The table data (a valid JSON array)
    *
    * @type {Array<Object>}
    */
-  data: Array<Object>;
+  data: ?Array<Object>;
 
   hidden: ?boolean;
-  tag: string | number;
+  tag: ?string | ?number;
   bordered: ?boolean;
   borderless: ?boolean;
   striped: ?boolean;

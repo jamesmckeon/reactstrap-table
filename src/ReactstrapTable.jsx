@@ -29,6 +29,26 @@ type UniqueRow = {
   reactKey: number
 };
 
+/**
+ * Validates that data contains fieldName
+ * 
+ * @param {Array<Object>} data 
+ * @param {string} fieldName 
+ * @returns true if the first element in data has a field matching fieldName
+ */
+const checkField = (data: Array<Object>, fieldName: string) =>{
+  if (!data || data.length < 1){
+    throw new Error('data is empty');
+  }
+
+  if (!fieldName){
+    throw new Error('fieldName is empty')
+  }
+
+  const row = data[0];
+  return Object.keys(row).some(k => k === fieldName);
+}
+
 const buildState = (props: TableProps): TableState => {
   const getColumnDefs = (): Array<ColumnDef> => {
     if (!props || !props.data || props.data.length === 0) {
@@ -71,14 +91,26 @@ const buildState = (props: TableProps): TableState => {
   };
 
   const state = {};
-  state.HasData = props && props.data && props.data.length > 0;
+  state.HasData = props.data ? props.data.length > 0 : false;
 
   state.TotalPages = state.HasData ? 1 : 0;
-  if (props.pagingOptions && state.HasData) {
+  if (props.pagingOptions && props.data) {
     state.TotalPages = props.pagingOptions.getTotalPages(props.data.length);
   }
   state.CurrentPage = state.HasData ? 1 : 0;
-  state.SortedData = state.HasData ? formatData(props.data) : [];
+
+  let sortedData = props.data;
+
+  if (sortedData && props.initialSort){
+    if (!checkField(sortedData, props.initialSort.FieldName)) { 
+      throw new Error('field "' + props.initialSort.FieldName + '" not found in data');
+
+   }
+   sortedData = Sorter.Sort(sortedData, props.initialSort.FieldName, props.initialSort.Ascending);
+   }
+
+
+  state.SortedData = sortedData ? formatData(sortedData) : [];
   state.ColumnDefs = getColumnDefs();
   state.ShowPager = state.TotalPages != null && state.TotalPages > 1;
 

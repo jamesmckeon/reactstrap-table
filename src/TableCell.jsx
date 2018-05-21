@@ -7,8 +7,9 @@ import { type ColumnDef } from "ColumnDef";
 import StyleBuilder from "StyleBuilder";
 
 export type CellClicked = (fieldName: string, val: string) => void;
+
 type TableCellProps = {
-  onClick?: CellClicked,
+  onClick: ?CellClicked,
   id: string,
   columnDef: ColumnDef,
   children: React.Node
@@ -45,10 +46,6 @@ const TableCell = (props: TableCellProps) => {
   ) : (
     <td id={props.id}>{props.children}</td>
   );
-};
-
-TableCell.defaultProps = {
-  onClick: null
 };
 
 export default TableCell;
