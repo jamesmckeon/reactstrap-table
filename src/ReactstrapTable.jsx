@@ -50,6 +50,7 @@ const checkField = (data: Array<Object>, fieldName: string) =>{
 }
 
 const buildState = (props: TableProps): TableState => {
+
   const getColumnDefs = (): Array<ColumnDef> => {
     if (!props || !props.data || props.data.length === 0) {
       return [];
@@ -58,13 +59,14 @@ const buildState = (props: TableProps): TableState => {
     const row = props.data[0];
 
     // iterate over each column in row except for reactKey
-    return Object.keys(row)
+    return  Object.keys(row)
       .filter(f => f !== "reactKey")
       .map((fieldName: string) => {
+
         // find columnDef based on field name
         const def =
-          props.columnDefs &&
-          props.columnDefs.find((d: ColumnDef) => d.fieldName === fieldName);
+          props.columnDefs ?
+          props.columnDefs.find((d: ColumnDef) => d.fieldName === fieldName): null;
 
         // if a column def has been provided for this ordinal, use it
         if (def) {
@@ -73,6 +75,8 @@ const buildState = (props: TableProps): TableState => {
         // otherwise, use fieldname for header text
         return { fieldName, headerText: fieldName };
       });
+
+
   };
 
   const formatData = (data: Array<Object>): Array<UniqueRow> => {

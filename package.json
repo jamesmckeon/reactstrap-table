@@ -1,6 +1,6 @@
 {
     "name": "@jbmckeon/reactstrap-table",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "license": "MIT",
     "author": {
         "name": "James McKeon",
@@ -22,7 +22,6 @@
         "doc": "documentation build src/** -f html -o docs",
         "doc watch": "documentation serve --watch app.js",
         "doc readme": "documentation readme -s Documentation src/**"
-
     },
     "dependencies": {
         "@fortawesome/fontawesome": "^1.1.8",

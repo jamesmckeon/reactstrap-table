@@ -54,7 +54,7 @@ export default class Sorter {
     if (data.length < 2) {
       return data;
     }
-    console.log(fieldName);
+
     const row = data[0];
     const val = row[fieldName];
     const comparer = getComparer(val, fieldName, ascending);
